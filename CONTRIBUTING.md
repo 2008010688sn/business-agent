@@ -12,7 +12,6 @@
 mvn -f framework-lite/pom.xml -DskipTests install
 mvn -f backend/pom.xml -DskipTests compile
 cd frontend && pnpm install && pnpm build
-python scripts/brand-scan.py
 ```
 
 ## Rules
