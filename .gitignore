@@ -37,6 +37,9 @@ frontend/node_modules/
 data/
 backend/src/main/resources/sql/pg/demo-biz-data.sql
 
+# Maintainer-only dump of live model keys — never commit
+scripts/export_model_config.py
+
 # OS
 .DS_Store
 Thumbs.db

@@ -16,7 +16,6 @@ Windows + WSL 本地启动顺序见 [getting-started.md](getting-started.md)。
 | `scripts/dev-frontend.ps1` | Windows | `pnpm dev`（端口 **6868**） |
 | `scripts/dev-backend.sh` | Linux/macOS | 本机 5432/6379 时用，需自己 export 端口 |
 | `scripts/dev-frontend.sh` | Linux/macOS | `pnpm dev`（端口 **6868**） |
-| `scripts/export_order_bill_demo.py` | 维护者 | 从源库拷本月订单/账单行 + 技能配置；需要 `SRC_PG_*` 环境变量，不要把密码写进仓库 |
 | `scripts/init-db.sh` / `init-db.ps1` | 有本机 `psql` 时 | 灌库；WSL 场景请用 `wsl-load-schema.sh` |
 | `scripts/smoke-stream.py` | 任意 | 创建会话并打 `POST /ai/stream/search` |
 | `scripts/brand-scan.py` | 任意 | 扫描公司域名、Nacos、Sa-Token、业务 MCP 残留 |
@@ -33,8 +32,9 @@ Windows + WSL 本地启动顺序见 [getting-started.md](getting-started.md)。
 |---|---|
 | `scripts/rewrite_packages.py` | `com.xx.cloud.ai` → `com.sn68.agent`，配置前缀 `spring.ai.xx.data-agent` → `spring.ai.agent` |
 | `scripts/sanitize_backend.py` | 后端去 Feign / 权限注解等机械清洗 |
+| `scripts/export_order_bill_demo.py` | 从源库拷本月订单/账单行 + 技能配置（需 `SRC_PG_*`）。**不拷模型 Key。** |
 
-再跑会把已改名的代码改坏。
+再跑会把已改名的代码改坏。模型配置只允许在控制台或环境变量 `AGENT_OPENAI_API_KEY` 写入本地库，不要进 git。
 
 ## Docker
 
