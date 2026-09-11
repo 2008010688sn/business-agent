@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sn68.agent.dataagent.repository.DataAgentSkillToolRefMapper">
+
+    <!-- 按工具资源标识查询「已发布 Skill 版本 → 固定工具版本」的可见引用清单；
+         三表 JOIN 均显式过滤 deleted=false 且仅取 PUBLISHED 的当前发布版本；
+         tenantId 非空时限定 scope='TENANT' 且租户匹配，tenantId 为空时恒返回空集（AND 1 = 0） -->
+    <select id="findVisiblePublishedReferences" resultType="com.sn68.agent.dataagent.dto.tool.ToolReferenceResp">
+        SELECT skill.skill_code,
+               skill.skill_name,
+               skill.execution_mode,
+               skill.scope AS skill_scope,
+               version.id AS skill_version_id,
+               version.version_no AS skill_version_no,
+               ref.resource_version_id,
+               resource_version.version_no AS tool_version_no,
+               ref.usage,
+               ref.status
+        FROM data_agent_skill_tool_ref ref
+        JOIN data_agent_skill_version version
+          ON version.id = ref.skill_version_id
+         AND version.deleted = false
+         AND version.status = 'PUBLISHED'
+        JOIN data_agent_skill skill
+          ON skill.id = version.skill_id
+         AND skill.deleted = false
+         AND skill.status = 'PUBLISHED'
+         AND skill.published_version_id = version.id
+        JOIN agent_execution_resource_version resource_version
+          ON resource_version.id = ref.resource_version_id
+         AND resource_version.deleted = false
+        WHERE ref.resource_key = #{resourceKey}
+          AND ref.deleted = false
+          AND LOWER(COALESCE(ref.status, 'enabled')) != 'disabled'
+        <choose>
+            <when test="tenantId != null and tenantId != ''">
+            AND skill.scope = 'TENANT'
+            AND skill.tenant_id = #{tenantId}
+            </when>
+            <otherwise>
+            AND 1 = 0
+            </otherwise>
+        </choose>
+        ORDER BY skill.skill_code, version.version_no DESC, ref.display_order
+    </select>
+
+    <!-- 统计工具资源被「已发布 Skill 当前发布版本」引用且未禁用的引用条数（不区分租户，用于删除前防护校验） -->
+    <select id="countPublishedReferences" resultType="_long">
+        SELECT COUNT(1)
+        FROM data_agent_skill_tool_ref ref
+        JOIN data_agent_skill_version version
+          ON version.id = ref.skill_version_id
+         AND version.deleted = false
+         AND version.status = 'PUBLISHED'
+        JOIN data_agent_skill skill
+          ON skill.id = version.skill_id
+         AND skill.deleted = false
+         AND skill.status = 'PUBLISHED'
+         AND skill.published_version_id = version.id
+        WHERE ref.resource_key = #{resourceKey}
+          AND ref.deleted = false
+          AND LOWER(COALESCE(ref.status, 'enabled')) != 'disabled'
+    </select>
+
+</mapper>

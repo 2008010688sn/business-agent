@@ -1,0 +1,346 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "title": "数字员工授权域观测（PR-10 可观测性与灰度基建）",
+  "uid": "digital-employee-authz",
+  "description": "PR-10 交付物 2：授权决策/影子差异率/IAM 签发/任务受理观测大盘。指标源 xx-cloud-ai /actuator/prometheus（application=xx-cloud-ai）。差异率面板 0.1% 阈值线对应 ENFORCE 门禁（PR-9 依赖）。",
+  "tags": ["digital-employee", "authorization", "pr-10"],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "graphTooltip": 1,
+  "timezone": "browser",
+  "refresh": "1m",
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "prometheus_ds",
+        "label": "Prometheus 数据源",
+        "type": "datasource",
+        "query": "prometheus",
+        "current": {},
+        "hide": 0,
+        "refresh": 1
+      },
+      {
+        "name": "tenant",
+        "label": "租户",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+        "query": "label_values(data_agent_authorization_shadow_comparison_total, tenant)",
+        "current": { "text": "All", "value": "$__all" },
+        "includeAll": true,
+        "allValue": ".*",
+        "multi": true,
+        "hide": 0,
+        "refresh": 2
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "row",
+      "title": "授权决策总览",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "决策速率（按结论 outcome）",
+      "description": "data.agent.authorization.decisions Counter 速率：ALLOW vs DENY。SHADOW 模式下 DENY 不拦截（影子结论），ENFORCE 模式下 DENY 即真实拦截。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum by (outcome) (rate(data_agent_authorization_decisions_total[5m]))",
+          "legendFormat": "{{outcome}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "fillOpacity": 15 } },
+        "overrides": []
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "决策速率（按场景 scene / 生效模式 mode）",
+      "description": "HOOK_EXECUTE / MEMORY_READ / MEMORY_WRITE / TASK_START 等场景 × SHADOW/ENFORCE 模式分布。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+      "targets": [
+        {
+          "expr": "sum by (scene, mode) (rate(data_agent_authorization_decisions_total[5m]))",
+          "legendFormat": "{{scene}} / {{mode}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "fillOpacity": 10 } }, "overrides": [] }
+    },
+    {
+      "type": "row",
+      "title": "PDP 评估性能与异常",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "PDP 决策评估延迟 P95 / P99",
+      "description": "data.agent.authorization.decision.duration Timer 客户端百分位（导出 _seconds + quantile）。挂点 RuntimePolicyEvaluator.evaluate 全路径。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 10 },
+      "targets": [
+        {
+          "expr": "max by (mode, quantile) (data_agent_authorization_decision_duration_seconds{quantile=~\"0.95|0.99\"})",
+          "legendFormat": "{{mode}} P{{quantile}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "PDP 评估异常（SHADOW quiet + ENFORCE 失败关闭）",
+      "description": "data.agent.authorization.decision.errors Counter：ENFORCE 下评估异常即失败关闭拦截；持续增长需按日志 errorType 排查策略 JSON / Release 快照解析。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
+      "targets": [
+        {
+          "expr": "sum by (mode) (increase(data_agent_authorization_decision_errors_total[5m]))",
+          "legendFormat": "{{mode}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+    },
+    {
+      "type": "row",
+      "title": "影子比对与差异率（ENFORCE 门禁数据源）",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "影子比对计数（三状态堆叠，近 1h 增量）",
+      "description": "data.agent.authorization.shadow.comparison：MATCHED / MISMATCHED / ORIGINAL_ONLY（现网结论缺失，不进差异率分母，单列观测）。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 19 },
+      "targets": [
+        {
+          "expr": "sum by (comparison_status) (increase(data_agent_authorization_shadow_comparison_total[1h]))",
+          "legendFormat": "{{comparison_status}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short", "custom": { "fillOpacity": 40, "stacking": { "mode": "normal" } } },
+        "overrides": []
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "影子差异率（按租户，红线 = ENFORCE 门禁 0.1%）",
+      "description": "data.agent.authorization.shadow.mismatch.rate Gauge（差异报告作业回填）：mismatched / (matched + mismatched)。任一租户持续高于 0.001 即禁止灰度 ENFORCE（P2 告警同口径）。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 19 },
+      "targets": [
+        {
+          "expr": "max by (tenant) (data_agent_authorization_shadow_mismatch_rate{tenant=~\"$tenant\"})",
+          "legendFormat": "tenant {{tenant}}",
+          "refId": "A"
+        },
+        {
+          "expr": "0.001",
+          "legendFormat": "ENFORCE 门禁阈值 0.1%",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit", "min": 0, "max": 0.01 },
+        "overrides": [
+          {
+            "matcher": { "id": "byFrameRefID", "options": "B" },
+            "properties": [
+              { "id": "custom.lineStyle", "value": { "fill": "dash", "dash": [10, 10] } },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "row",
+      "title": "IAM 令牌签发（数字员工执行凭据）",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "IAM execution-context 签发延迟 P99",
+      "description": "data.agent.employee.token.issuance.duration Timer（BeanPostProcessor 无侵入代理挂点，tag: method/outcome）。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "targets": [
+        {
+          "expr": "max by (method) (data_agent_employee_token_issuance_duration_seconds{quantile=\"0.99\"})",
+          "legendFormat": "{{method}} P99",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "IAM 签发 QPS 与失败率",
+      "description": "失败率 = ERROR 调用速率 / 总调用速率（clamp_min 兜底）。持续失败将令任务 WAITING_AUTH（Principal 停用会 kickout）。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "targets": [
+        {
+          "expr": "sum by (outcome) (rate(data_agent_employee_token_issuance_duration_seconds_count[5m]))",
+          "legendFormat": "{{outcome}}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(data_agent_employee_token_issuance_duration_seconds_count{outcome=\"ERROR\"}[10m])) / clamp_min(sum(rate(data_agent_employee_token_issuance_duration_seconds_count[10m])), 0.001)",
+          "legendFormat": "失败率",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+    },
+    {
+      "type": "row",
+      "title": "任务侧观测（SKIPPED / 受理延迟）",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 36 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "SKIPPED 台账行（最近报告窗口，按原因）",
+      "description": "data.agent.task.run.skipped.window Gauge：SLOT_CONFLICT = FORBID 并发槽冲突（CONCURRENT_SLOT_LOCKED）；OTHER = 其余跳过原因。差异报告作业按窗口回填。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 37 },
+      "targets": [
+        {
+          "expr": "max by (tenant, reason) (data_agent_task_run_skipped_window{tenant=~\"$tenant\"})",
+          "legendFormat": "tenant {{tenant}} / {{reason}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+    },
+    {
+      "type": "timeseries",
+      "title": "任务受理延迟 P95（红线 = 200ms SLO）",
+      "description": "data.agent.task.workitem.create.p95.seconds Gauge（agent_task_run create_time - scheduled_time 聚合回填）。超 0.2s 触发 P3 告警。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 37 },
+      "targets": [
+        {
+          "expr": "max(data_agent_task_workitem_create_p95_seconds)",
+          "legendFormat": "受理延迟 P95",
+          "refId": "A"
+        },
+        {
+          "expr": "0.2",
+          "legendFormat": "SLO 阈值 200ms",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" },
+        "overrides": [
+          {
+            "matcher": { "id": "byFrameRefID", "options": "B" },
+            "properties": [
+              { "id": "custom.lineStyle", "value": { "fill": "dash", "dash": [10, 10] } },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "row",
+      "title": "Token 预算（task 域接线后生效）",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 45 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "stat",
+      "title": "Token 预算超限（P1，近 1h）",
+      "description": "token_budget_exceeded_total（清单钦定指标名，PR-6 遗留 task 域埋点）：接线前 no-data 显示 N/A；接线后任一增长即 P1。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 46 },
+      "targets": [
+        {
+          "expr": "sum(increase(token_budget_exceeded_total[1h]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "noValue": "N/A（task 域未接线）"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "stat",
+      "title": "影子比对窗口总量（最近报告窗口）",
+      "description": "data.agent.authorization.shadow.window.count 三状态合计快照（差异报告作业回填）。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 46 },
+      "targets": [
+        {
+          "expr": "sum(data_agent_authorization_shadow_window_count)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "等待首轮报告" }, "overrides": [] }
+    },
+    {
+      "type": "stat",
+      "title": "门禁未过租户数（差异率 ≥ 0.1%）",
+      "description": "当前报告窗口内差异率超 ENFORCE 门禁阈值的租户数：非 0 则 PR-9 灰度暂停。",
+      "datasource": { "type": "prometheus", "uid": "${prometheus_ds}" },
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 46 },
+      "targets": [
+        {
+          "expr": "count(data_agent_authorization_shadow_mismatch_rate >= 0.001)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "noValue": "0"
+        },
+        "overrides": []
+      }
+    }
+  ]
+}

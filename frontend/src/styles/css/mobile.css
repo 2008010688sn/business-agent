@@ -1,0 +1,162 @@
+@media screen and (max-width: 767px) {
+  html:root {
+    --el-font-size-extra-small: 10px !important;
+    --el-font-size-small: 11px !important;
+    --el-font-size-base: 12px !important;
+    --el-font-size-medium: 14px !important;
+    --el-font-size-large: 16px !important;
+    --el-font-size-extra-large: 18px !important;
+    --minimal-font-size-extra-small: 11px !important;
+    --minimal-font-size-small: 12px !important;
+    --minimal-font-size-base: 13px !important;
+    --minimal-font-size-medium: 15px !important;
+    --minimal-font-size-large: 17px !important;
+    --minimal-font-size-extra-large: 19px !important;
+    --minimal-font-size-button-small: 11px !important;
+    --minimal-font-size-button-large: 14px !important;
+    --minimal-font-size-card-title: 15px !important;
+    --minimal-font-size-title: 17px !important;
+    --minimal-font-size-collapse-title: 15px !important;
+    --minimal-font-size-statistic: 23px !important;
+    --minimal-font-size-divider: 15px !important;
+    --minimal-font-size-utility-10: 9px !important;
+    --minimal-font-size-utility-11: 10px !important;
+    --minimal-font-size-utility-12: 11px !important;
+    --minimal-font-size-utility-13: 12px !important;
+    --minimal-font-size-utility-14: 13px !important;
+    --minimal-font-size-utility-15: 14px !important;
+    --minimal-font-size-utility-16: 15px !important;
+    --minimal-font-size-utility-17: 16px !important;
+    --minimal-font-size-utility-18: 17px !important;
+    --minimal-font-size-utility-20: 19px !important;
+    --minimal-font-size-utility-22: 21px !important;
+    --minimal-font-size-utility-24: 23px !important;
+    --minimal-font-size-utility-28: 27px !important;
+    --minimal-font-size-utility-30: 29px !important;
+    --minimal-font-size-utility-32: 31px !important;
+    --enterprise-font-size-extra-small: 10px !important;
+    --enterprise-font-size-small: 11px !important;
+    --enterprise-font-size-base: 12px !important;
+    --enterprise-font-size-medium: 13px !important;
+    --enterprise-font-size-large: 14px !important;
+    --enterprise-font-size-extra-large: 16px !important;
+    --enterprise-font-size-button-small: 10px !important;
+    --enterprise-font-size-button-large: 12px !important;
+    --enterprise-font-size-card-title: 13px !important;
+    --enterprise-font-size-title: 15px !important;
+    --enterprise-font-size-collapse-title: 13px !important;
+    --enterprise-font-size-statistic: 20px !important;
+    --enterprise-font-size-divider: 13px !important;
+    --enterprise-font-size-utility-10: 9px !important;
+    --enterprise-font-size-utility-11: 10px !important;
+    --enterprise-font-size-utility-12: 11px !important;
+    --enterprise-font-size-utility-13: 12px !important;
+    --enterprise-font-size-utility-14: 13px !important;
+    --enterprise-font-size-utility-15: 14px !important;
+    --enterprise-font-size-utility-16: 15px !important;
+    --enterprise-font-size-utility-17: 16px !important;
+    --enterprise-font-size-utility-18: 17px !important;
+    --enterprise-font-size-utility-20: 18px !important;
+    --enterprise-font-size-utility-22: 20px !important;
+    --enterprise-font-size-utility-24: 22px !important;
+    --enterprise-font-size-utility-28: 26px !important;
+    --enterprise-font-size-utility-30: 28px !important;
+    --enterprise-font-size-utility-32: 30px !important;
+  }
+
+  /* 允许页面纵向滚动 */
+  html,
+  body,
+  #app {
+    font-size: 12px !important;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .el-form {
+    --el-form-label-font-size: 12px !important;
+  }
+
+  .el-form .el-form-item__label {
+    font-size: 12px !important;
+  }
+
+  .el-select__wrapper {
+    font-size: 12px !important;
+  }
+  /* 列表页容器：允许横向滚动 */
+  .list-page {
+    overflow-x: auto !important;
+  }
+
+  /* ElCard 内表格：允许横向滚动 */
+  .el-card__body {
+    overflow-x: auto !important;
+  }
+
+  /* 搜索表单：ElCol 强制占满整行 */
+  .el-col-6,
+  .el-col-12,
+  .el-col-8,
+  .el-col-10,
+  .el-col-7,
+  .el-col-5,
+  .el-col-18,
+  .el-col-4 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  /* 搜索表单按钮区域 */
+  .el-form .el-form-item:last-child .el-button + .el-button {
+    margin-left: 8px !important;
+  }
+
+  /* 表格区域：强制横向滚动 */
+  .el-table {
+    min-width: 600px;
+  }
+
+  /* 操作按钮区域：允许换行 */
+  .dialog-footer,
+  .el-card__body > .flex {
+    flex-wrap: wrap !important;
+  }
+
+  /* 对话框宽度：窄屏全屏 */
+  .el-dialog {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 0 auto !important;
+  }
+
+  .el-dialog .el-dialog__body {
+    overflow-x: auto !important;
+  }
+
+  .el-dialog .el-table {
+    overflow-x: auto !important;
+  }
+
+  /* Mobile Sider 抽屉：高度脱离内容区，避免右侧内容变矮时菜单跟着变矮 */
+  .app-mobile-sider {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+  }
+
+  .app-mobile-sider:not(.overflow-hidden) {
+    width: 220px !important;
+    overflow-y: auto !important;
+  }
+
+  .app-mobile-sider + div {
+    position: fixed !important;
+    inset: 0 !important;
+    height: 100dvh !important;
+  }
+}

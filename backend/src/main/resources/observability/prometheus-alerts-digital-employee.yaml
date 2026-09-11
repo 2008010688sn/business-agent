@@ -1,0 +1,74 @@
+# ============================================================================
+# 数字员工平台授权域告警规则（PR-10 可观测性与灰度基建，交付物 3）
+# 归属：xx-cloud-ai（application=xx-cloud-ai 标签由 management.metrics.tags 注入）
+# 部署：导入 Prometheus（PrometheusRule 格式，兼容 kube-prometheus-stack）
+# 阈值口径（v1.2 清单 PR-10 节）：
+#   P1  token_budget_exceeded_total[1h] > 0            —— 预算超限即告警（PR-6 埋点，task 域接线后生效）
+#   P2  shadow_mismatch_rate > 0.1%                    —— 影子差异率超门禁阈值（ENFORCE 前置红线）
+#   P3  workitem_create_latency_p95 > 200ms            —— 任务受理延迟 SLO 违约
+# 指标名说明：Micrometer 注册名导出为 Prometheus 下划线风格（点→下划线，Counter 补 _total 后缀）；
+#   token.budget.exceeded（Counter）→ token_budget_exceeded_total（清单钦定指标名，task 域埋点对齐）。
+# 回滚：直接删除本规则组（无状态依赖）；配套大盘见同目录 grafana-dashboard JSON。
+# ============================================================================
+groups:
+  - name: digital-employee-authorization
+    rules:
+      # P1：Token 预算耗尽（清单 11.4：rate(token_budget_exceeded_total[1h])>0）
+      # 数据源：task 域 Step 入口预算检查埋点（PR-6 遗留，指标注册名 token.budget.exceeded）。
+      # 未接线前该序列 no-data 不触发；接线后任一增长即 P1。
+      - alert: DataAgentTokenBudgetExceeded
+        expr: increase(token_budget_exceeded_total[1h]) > 0
+        for: 0m
+        labels:
+          severity: P1
+          domain: digital-employee
+        annotations:
+          summary: "Token 预算耗尽（P1）"
+          description: "近 1h 出现预算超限拒绝（任务 {{ $labels.tenant }}），步骤执行已被拒并置终态。检查任务预算配置与模型消耗漂移。"
+
+      # P2：影子差异率超 ENFORCE 门禁阈值（清单 PR-10/PR-9：mismatched ratio <0.1% 才可灰度）
+      # 数据源：data.agent.authorization.shadow.mismatch.rate Gauge（差异报告作业按租户回填）。
+      - alert: DataAgentShadowMismatchRateHigh
+        expr: max(data_agent_authorization_shadow_mismatch_rate) > 0.001
+        for: 15m
+        labels:
+          severity: P2
+          domain: digital-employee
+        annotations:
+          summary: "影子差异率超 0.1% 门禁（P2）"
+          description: "租户 {{ $labels.tenant }} 最近报告窗口差异率 {{ $value | humanizePercentage }}，超过 ENFORCE 门禁阈值。用 decision_id 定位 MISMATCHED 样本（/actuator/prometheus 同源报告 CSV）并归零后再灰度。"
+
+      # P3：任务受理延迟 P95 超 200ms SLO（清单：workitem_create_latency_p95 > 200ms）
+      # 数据源：data.agent.task.workitem.create.p95.seconds Gauge（差异报告作业聚合回填）。
+      - alert: DataAgentWorkItemCreateLatencyP95High
+        expr: data_agent_task_workitem_create_p95_seconds > 0.2
+        for: 10m
+        labels:
+          severity: P3
+          domain: digital-employee
+        annotations:
+          summary: "任务受理延迟 P95 超 200ms（P3）"
+          description: "最近报告窗口受理延迟 P95 = {{ $value | humanizeDuration }}。检查调度触发链路与 agent_task_run 写入热点。"
+
+      # P3 补充：PEP 决策评估异常（SHADOW quiet/ENFORCE 失败关闭两类路径合计）
+      - alert: DataAgentAuthorizationEvaluationErrors
+        expr: increase(data_agent_authorization_decision_errors_total[5m]) > 0
+        for: 0m
+        labels:
+          severity: P3
+          domain: digital-employee
+        annotations:
+          summary: "授权决策评估异常增长（P3）"
+          description: "近 5m PDP 评估异常 {{ $value }} 次（mode={{ $labels.mode }}）。SHADOW 为旁路异常，ENFORCE 为失败关闭拦截，按日志 errorType 排查策略 JSON/快照解析。"
+
+      # P3 补充：IAM 签发失败率（数字员工执行凭据不可用，持续失败将令任务 WAITING_AUTH）
+      - alert: DataAgentTokenIssuanceErrorRateHigh
+        expr: sum(rate(data_agent_employee_token_issuance_duration_seconds_count{outcome="ERROR"}[10m]))
+          / clamp_min(sum(rate(data_agent_employee_token_issuance_duration_seconds_count[10m])), 0.001) > 0.2
+        for: 10m
+        labels:
+          severity: P3
+          domain: digital-employee
+        annotations:
+          summary: "IAM 令牌签发失败率超 20%（P3）"
+          description: "近 10m execution-context 签发失败率 {{ $value | humanizePercentage }}。检查 IAM 可用性与 Principal 状态（停用会 kickout）。"

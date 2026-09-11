@@ -1,0 +1,59 @@
+/*
+ * Copyright 2024-2026 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.sn68.agent.dataagent.enums;
+
+import com.sn68.agent.framework.commons.entity.DictEnum;
+
+/**
+ * Provider request shape used to control reasoning.
+ */
+public enum ModelReasoningProtocol implements DictEnum<String> {
+
+	AUTO,
+
+	REASONING_EFFORT,
+
+	THINKING_OBJECT,
+
+	/**
+	 * An explicit model-family profile that emits both a thinking toggle object
+	 * and a top-level reasoning effort.  It is intentionally separate from
+	 * THINKING_OBJECT so providers that do not support the second field never
+	 * receive it by default.
+	 */
+	THINKING_OBJECT_WITH_EFFORT,
+
+	ENABLE_THINKING,
+
+	/**
+	 * An enable-only thinking profile.  The provider may not accept an explicit
+	 * disable value, so the resolver rejects DISABLED for this profile.
+	 */
+	ENABLE_THINKING_ONLY,
+
+	NONE;
+
+	@Override
+	public String getValue() {
+		return name();
+	}
+
+	@Override
+	public String getLabel() {
+		return name();
+	}
+
+}

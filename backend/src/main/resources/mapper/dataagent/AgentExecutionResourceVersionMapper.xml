@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sn68.agent.dataagent.repository.AgentExecutionResourceVersionMapper">
+
+    <!-- Skill 工具编辑器下拉选项：已发布、未删除、资源启用且未禁用的工具版本，
+         仅本租户（tenant_id 为空失败关闭）；mode=REACT 仅允许 READ+MODEL，mode=FLOW 排除 WRITE+MODEL；
+         selectedIds 中已选版本无条件补入（保证编辑回显时历史选中项不丢失） -->
+    <select id="findSkillToolEditorOptions" resultType="map">
+        SELECT v.id AS resource_version_id,
+               v.resource_key,
+               v.version_no,
+               v.status AS resource_version_status,
+               v.deleted AS resource_version_deleted,
+               v.access_mode,
+               v.exposure_mode,
+               r.resource_name,
+               v.tenant_id AS resource_tenant_id,
+               r.enabled AS resource_enabled,
+               r.status AS resource_status,
+               r.deleted AS resource_deleted
+        FROM agent_execution_resource_version v
+        LEFT JOIN agent_execution_resource r ON r.id = v.resource_id
+        WHERE (
+            (
+              v.status = 'PUBLISHED'
+              AND v.deleted = FALSE
+              AND COALESCE(r.deleted, FALSE) = FALSE
+              AND COALESCE(r.enabled, FALSE) = TRUE
+              AND LOWER(COALESCE(r.status, '')) != 'disabled'
+              <choose>
+                <when test="tenantId != null and tenantId != ''">
+                  AND v.tenant_id = #{tenantId}
+                </when>
+                <otherwise>
+                  AND 1 = 0
+                </otherwise>
+              </choose>
+              <choose>
+                <when test="mode == 'REACT'">
+                  AND v.access_mode = 'READ' AND v.exposure_mode = 'MODEL'
+                </when>
+                <when test="mode == 'FLOW'">
+                  AND NOT (v.access_mode = 'WRITE' AND v.exposure_mode = 'MODEL')
+                </when>
+              </choose>
+            )
+            <if test="selectedIds != null and selectedIds.size() > 0">
+              OR v.id IN
+              <foreach collection="selectedIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+            </if>
+          )
+        ORDER BY COALESCE(r.resource_name, v.resource_key), v.version_no DESC
+    </select>
+
+</mapper>

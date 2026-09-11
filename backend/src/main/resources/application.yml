@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: business-agent
+  profiles:
+    active: local
+  config:
+    import:
+      - optional:classpath:config/security.yaml
+      - optional:classpath:config/cloud.yaml
+      - optional:classpath:config/datasource.yaml
+      - optional:classpath:config/mybatis-plus.yaml
+      - optional:classpath:config/storage.yaml
+      - optional:classpath:config/agent.yaml
+      - optional:file:./config/application-local.yaml

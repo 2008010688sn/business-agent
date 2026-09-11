@@ -1,0 +1,65 @@
+# 授权基线清单（治理项 P0-1 的待办清单）
+#
+# 每一行 = 一个「未做细粒度权限校验」的端点，格式 SimpleClassName#methodName。
+# 由 ControllerAuthorizationBaselineTest 反射扫描全部 @RestController 得出，与该测试双向断言。
+#
+# ── 这些端点到底处于什么状态 ─────────────────────────────────────────
+# 本模块基线鉴权来自 framework 的 SaInterceptor（OAuth2AutoConfiguration:44-70，match("/**")）。
+# 它的策略是 StpUtil.checkLogin()，所以「无注解」的准确含义是：
+#     任何已登录用户均可访问，不区分租户、不区分角色。
+# 不等于完全匿名公开，但对下方「管理面」分区里那些持有密钥、可改数据源与模型配置的接口，
+# 这仍然是必须收敛的越权面。
+#
+# ⚠️ 前置依赖：framework 的 Same-Token 校验缺陷（OAuth2AutoConfiguration:52-56 只判头存在、
+#    不校验真伪）会让上述 checkLogin 基线失效。该缺陷修复前，本清单端点实际匿名可达。
+#    详见 服务治理/06-ai/AI模块整改治理PRD.md「🔴🔴 框架缺陷：Same-Token」。
+#
+# ── 维护规则（棘轮，只能变短）─────────────────────────────────────────
+# 1. 给端点补上 @SaCheckPermission / @SaCheckRole 后，必须把对应行从本文件删除，否则测试失败。
+# 2. 新增端点若未加权限注解，测试会失败并提示。请优先加注解；
+#    确属无需权限区分的接口（如第三方回调、健康探针），经评审后再登记到本文件并写明理由。
+# 3. 不要为了让测试变绿而往本文件里加行——那等于把缺口重新藏起来，与本文件的目的相反。
+#
+# 目标：清空本文件。届时 P0-1 收口。
+#
+# PR6：dataagent 租户用户 API 已补 @SaCheckPermission。本清单仅保留：
+#   - IM 第三方回调（故意不加权限注解；login ignore/@SaIgnore 不在本 PR）
+#   - 遗留 LangChain4j `com.sn68.agent.agent.controller`（PR11 删除，本轮不改）
+
+# ══════════════════════════════════════════════════════════════════
+# 【故意不标权限】第三方回调
+# ══════════════════════════════════════════════════════════════════
+
+# --- ImCallbackController ---
+# intentionally no permission annotation; third-party webhook, signature in ImCallbackService.
+# Login ignore/@SaIgnore is out of this PR's scope.
+ImCallbackController#callback
+
+# ══════════════════════════════════════════════════════════════════
+# 【本轮不改】遗留 LangChain4j agent 包（out of scope）
+# ══════════════════════════════════════════════════════════════════
+
+# --- AgentController ---
+AgentController#chatStream
+AgentController#chatSync
+AgentController#create
+AgentController#delete
+AgentController#detail
+AgentController#detailByCode
+AgentController#disabled
+AgentController#enabled
+AgentController#list
+AgentController#modify
+
+# --- PromptTemplateController ---
+PromptTemplateController#create
+PromptTemplateController#delete
+PromptTemplateController#detail
+PromptTemplateController#detailByCode
+PromptTemplateController#disabled
+PromptTemplateController#enabled
+PromptTemplateController#list
+PromptTemplateController#listByTag
+PromptTemplateController#listByType
+PromptTemplateController#modify
+PromptTemplateController#render

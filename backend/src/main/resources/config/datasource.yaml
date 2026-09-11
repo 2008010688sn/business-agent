@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:business_agent}
+    username: ${POSTGRES_USER:agent}
+    password: ${POSTGRES_PASSWORD:agent}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: business-agent
+      connection-init-sql: SET search_path TO agent, public
+      maximum-pool-size: 10
+      minimum-idle: 2
+  sql:
+    init:
+      mode: never

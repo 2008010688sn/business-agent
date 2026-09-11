@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Business Agent">
+  <rect width="64" height="64" rx="16" fill="#22c55e"/>
+  <circle cx="32" cy="32" r="16" fill="none" stroke="#fff" stroke-width="4"/>
+  <path d="M32 16v32M16 32h32" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="5" fill="#fff"/>
+</svg>

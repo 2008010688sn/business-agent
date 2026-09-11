@@ -1,0 +1,597 @@
+@use "sass:map";
+
+/**
+ * 响应式系统
+ * 提供统一的响应式工具和断点
+ */
+
+// ===== 断点定义 =====
+$breakpoints: (
+  'xs': 480px,
+  'sm': 640px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  '2xl': 1536px
+);
+
+// ===== 响应式 Mixin =====
+
+// 最小宽度断点（移动优先）
+@mixin respond-above($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+// 最大宽度断点
+@mixin respond-below($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: (map.get($breakpoints, $breakpoint) - 1px)) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+// 断点范围
+@mixin respond-between($lower, $upper) {
+  @if map.has-key($breakpoints, $lower) and map.has-key($breakpoints, $upper) {
+    @media (min-width: map.get($breakpoints, $lower)) and (max-width: (map.get($breakpoints, $upper) - 1px)) {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$lower} or #{$upper}";
+  }
+}
+
+// ===== 容器样式 =====
+
+// 响应式容器
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+  
+  @include respond-above('sm') {
+    max-width: 640px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  
+  @include respond-above('md') {
+    max-width: 768px;
+  }
+  
+  @include respond-above('lg') {
+    max-width: 1024px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  
+  @include respond-above('xl') {
+    max-width: 1280px;
+  }
+  
+  @include respond-above('2xl') {
+    max-width: 1536px;
+  }
+}
+
+// 固定宽度容器
+.container-fixed {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  
+  @include respond-above('lg') {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+// ===== 显示/隐藏工具 =====
+
+// 隐藏元素
+.hidden {
+  display: none !important;
+}
+
+// 响应式显示
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.inline {
+  display: inline;
+}
+
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.grid {
+  display: grid;
+}
+
+// 响应式隐藏
+.sm-hidden {
+  @include respond-above('sm') {
+    display: none !important;
+  }
+}
+
+.md-hidden {
+  @include respond-above('md') {
+    display: none !important;
+  }
+}
+
+.lg-hidden {
+  @include respond-above('lg') {
+    display: none !important;
+  }
+}
+
+.xl-hidden {
+  @include respond-above('xl') {
+    display: none !important;
+  }
+}
+
+// 只在特定断点显示
+.sm-only {
+  display: none !important;
+  
+  @include respond-between('sm', 'md') {
+    display: block !important;
+  }
+}
+
+.md-only {
+  display: none !important;
+  
+  @include respond-between('md', 'lg') {
+    display: block !important;
+  }
+}
+
+.lg-only {
+  display: none !important;
+  
+  @include respond-between('lg', 'xl') {
+    display: block !important;
+  }
+}
+
+// ===== 响应式间距 =====
+
+// 响应式 padding
+.p-responsive {
+  padding: 16px;
+  
+  @include respond-above('md') {
+    padding: 24px;
+  }
+  
+  @include respond-above('lg') {
+    padding: 32px;
+  }
+}
+
+.px-responsive {
+  padding-left: 16px;
+  padding-right: 16px;
+  
+  @include respond-above('md') {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  
+  @include respond-above('lg') {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+.py-responsive {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  
+  @include respond-above('md') {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+  
+  @include respond-above('lg') {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+}
+
+// 响应式 margin
+.m-responsive {
+  margin: 16px;
+  
+  @include respond-above('md') {
+    margin: 24px;
+  }
+  
+  @include respond-above('lg') {
+    margin: 32px;
+  }
+}
+
+.mx-responsive {
+  margin-left: 16px;
+  margin-right: 16px;
+  
+  @include respond-above('md') {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  
+  @include respond-above('lg') {
+    margin-left: 32px;
+    margin-right: 32px;
+  }
+}
+
+.my-responsive {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  
+  @include respond-above('md') {
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  
+  @include respond-above('lg') {
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
+}
+
+// ===== 响应式网格 =====
+
+// 响应式列数
+.grid-responsive {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  
+  @include respond-above('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-above('md') {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  
+  @include respond-above('lg') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// 固定列数网格
+.grid-cols-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.grid-cols-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  
+  @include respond-below('md') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-below('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.grid-cols-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  
+  @include respond-below('lg') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  @include respond-below('md') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-below('sm') {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ===== 响应式 Flex =====
+
+// 响应式方向
+.flex-responsive {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  
+  @include respond-above('md') {
+    flex-direction: row;
+    gap: 24px;
+  }
+}
+
+// 响应式换行
+.flex-wrap-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+// 响应式对齐
+.items-center-responsive {
+  align-items: center;
+  
+  @include respond-below('sm') {
+    align-items: flex-start;
+  }
+}
+
+// ===== 响应式文本 =====
+
+// 响应式标题
+.text-responsive-h1 {
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1.2;
+  
+  @include respond-above('md') {
+    font-size: 30px;
+  }
+  
+  @include respond-above('lg') {
+    font-size: 36px;
+  }
+}
+
+.text-responsive-h2 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  
+  @include respond-above('md') {
+    font-size: 24px;
+  }
+  
+  @include respond-above('lg') {
+    font-size: 30px;
+  }
+}
+
+.text-responsive-h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  
+  @include respond-above('md') {
+    font-size: 20px;
+  }
+}
+
+.text-responsive-body {
+  font-size: 14px;
+  line-height: 1.5;
+  
+  @include respond-above('md') {
+    font-size: 16px;
+  }
+}
+
+// ===== 响应式表格 =====
+
+// 水平滚动表格
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// 响应式表格布局
+.table-stack {
+  @include respond-below('md') {
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+    
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+    
+    tr {
+      border: 1px solid #ccc;
+      margin-bottom: 16px;
+    }
+    
+    td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+      
+      &:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// ===== 响应式侧边栏 =====
+
+// 侧边栏布局
+.sidebar-layout {
+  display: flex;
+  min-height: 100vh;
+  
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    
+    @include respond-below('lg') {
+      width: 240px;
+    }
+    
+    @include respond-below('md') {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      
+      &.is-open {
+        transform: translateX(0);
+      }
+    }
+  }
+  
+  .main-content {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// ===== 响应式工具类 =====
+
+// 宽度
+.w-full {
+  width: 100%;
+}
+
+.w-auto {
+  width: auto;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+// 高度
+.h-full {
+  height: 100%;
+}
+
+.h-auto {
+  height: auto;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+// 溢出
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+// 定位
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.sticky {
+  position: sticky;
+}
+
+// Z-index
+.z-0 {
+  z-index: 0;
+}
+
+.z-10 {
+  z-index: 10;
+}
+
+.z-20 {
+  z-index: 20;
+}
+
+.z-30 {
+  z-index: 30;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.z-max {
+  z-index: 9999;
+}

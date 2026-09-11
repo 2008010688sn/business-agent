@@ -1,0 +1,180 @@
+/*
+ * Copyright (c) 2023 xx-cloud Authors. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.sn68.agent.framework.commons.exception;
+
+import com.sn68.agent.framework.commons.entity.Dict;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.text.MessageFormat;
+
+/**
+ * 检查型异常
+ *
+ * @author Levin
+ * @since 2019-03-13
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class CheckedException extends RuntimeException {
+
+    private static final int BAD_REQUEST = 400;
+    private static final int FORBIDDEN = 403;
+    private static final int NOT_FOUND = 404;
+    private static final int SMS_SECONDARY_AUTH = 1000;
+    private static final int MULTI_TENANT_LOGIN = 1200;
+
+    /**
+     * 规范的HTTP状态响应码,如400/403/503等
+     */
+    private transient int code;
+    private transient Object[] args;
+    private Object data;
+
+    public CheckedException(String message) {
+        super(message);
+        this.setCode(BAD_REQUEST);
+    }
+
+    public CheckedException(int code, String message, Object data) {
+        super(message);
+        this.setCode(code);
+        this.setData(data);
+    }
+
+    public CheckedException(String message, Object data) {
+        super(message);
+        this.setCode(BAD_REQUEST);
+        this.setData(data);
+    }
+
+    public CheckedException(String message, Throwable e) {
+        super(message, e);
+        this.setCode(BAD_REQUEST);
+    }
+
+    public CheckedException(int code, String message, Object... arguments) {
+        super(message);
+        this.setCode(code);
+        this.setArgs(arguments);
+    }
+
+    public CheckedException(int code, String message, Object[] arguments, Throwable t) {
+        super(message, t);
+        this.code = code;
+        this.args = arguments;
+    }
+
+    /**
+     * badRequest
+     *
+     * @param message 错误消息
+     * @return 异常
+     */
+    public static CheckedException badRequest(String message) {
+        return new CheckedException(BAD_REQUEST, message);
+    }
+
+    /**
+     * badRequest 支持参数占位符（badRequest(订单 {0} 不存在,AP1001) 会被编译成 订单 AP1001 不存在）
+     *
+     * @param message   错误消息
+     * @param arguments arguments
+     * @return 异常
+     */
+    public static CheckedException badRequest(String message, Object... arguments) {
+        return new CheckedException(BAD_REQUEST, MessageFormat.format(message, arguments), arguments);
+    }
+
+    public static CheckedException badRequest(int code, String message) {
+        return new CheckedException(code, message);
+    }
+
+    /**
+     * badRequest
+     *
+     * @param dict 实现了 Dict 接口的任何类，意味着是可插拔的
+     * @return 异常
+     */
+    public static CheckedException badRequest(Dict<Integer> dict) {
+        return new CheckedException(dict.getValue(), dict.getLabel());
+    }
+
+    public static CheckedException badRequest(CommonErrorDict dict) {
+        return new CheckedException(dict.code(), dict.message());
+    }
+
+    public static CheckedException badRequest(int code, String message, String arg) {
+        return new CheckedException(code, String.format(message, arg));
+    }
+
+    public static CheckedException notFound(String message, Object... arguments) {
+        return new CheckedException(NOT_FOUND, MessageFormat.format(message, arguments), arguments);
+    }
+
+    public static CheckedException notFound(int code, String message, String arg) {
+        return new CheckedException(code, String.format(message, arg));
+    }
+
+    public static CheckedException notFound(String message) {
+        return new CheckedException(NOT_FOUND, message);
+    }
+
+    public static CheckedException notFound(int code, String message) {
+        return new CheckedException(code, message);
+    }
+
+    /**
+     * forbidden(403),固定返回登录过期默认文案「登录过期,请重新登录」
+     * <p>需要自定义 403 禁止原因时用 {@link #forbidden(String)}</p>
+     *
+     * @return 异常
+     */
+    public static CheckedException forbidden() {
+        return forbidden("登录过期,请重新登录");
+    }
+
+    /**
+     * forbidden(403),如实携带调用方传入的禁止原因,message 即用户可见提示
+     * <p>登录过期场景用无参 {@link #forbidden()}</p>
+     *
+     * @param message 错误消息(禁止访问的具体原因)
+     * @return 异常
+     */
+    public static CheckedException forbidden(String message) {
+        return new CheckedException(FORBIDDEN, message);
+    }
+
+    public static CheckedException fail(String message) {
+        return badRequest(message);
+    }
+
+    public static CheckedException fail(String message, Object data) {
+        return new CheckedException(message, data);
+    }
+
+    public static CheckedException smsCaptcha(String message, Object data) {
+        return new CheckedException(SMS_SECONDARY_AUTH, message, data);
+    }
+
+    public static CheckedException multiTenantLogin(String message, Object data) {
+        return new CheckedException(MULTI_TENANT_LOGIN, message, data);
+    }
+}

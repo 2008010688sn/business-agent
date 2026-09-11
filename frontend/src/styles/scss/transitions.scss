@@ -1,0 +1,486 @@
+/**
+ * 过渡动画系统
+ * 提供统一的过渡动画效果
+ */
+
+// ===== 基础过渡 =====
+
+// 淡入淡出
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+// 滑动 - 上
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+// 滑动 - 下
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-down-enter-from {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+// 滑动 - 左
+.slide-left-enter-active,
+.slide-left-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+// 滑动 - 右
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+// 缩放
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.3s ease;
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+// 缩放 - 弹性
+.scale-bounce-enter-active,
+.scale-bounce-leave-active {
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.scale-bounce-enter-from,
+.scale-bounce-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+// 旋转
+.rotate-enter-active,
+.rotate-leave-active {
+  transition: all 0.3s ease;
+}
+
+.rotate-enter-from,
+.rotate-leave-to {
+  opacity: 0;
+  transform: rotate(-10deg);
+}
+
+// ===== 列表动画 =====
+
+// 列表项进入/离开
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.4s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+// 列表项移动
+.list-move {
+  transition: transform 0.4s ease;
+}
+
+// 列表项交错进入
+.list-stagger-enter-active {
+  transition: all 0.4s ease;
+}
+
+.list-stagger-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+// ===== 弹窗动画 =====
+
+// 弹窗 - 淡入缩放
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+// 弹窗 - 遮罩层
+.modal-overlay-enter-active,
+.modal-overlay-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay-enter-from,
+.modal-overlay-leave-to {
+  opacity: 0;
+}
+
+// 抽屉 - 左侧
+.drawer-left-enter-active,
+.drawer-left-leave-active {
+  transition: all 0.3s ease;
+}
+
+.drawer-left-enter-from,
+.drawer-left-leave-to {
+  transform: translateX(-100%);
+}
+
+// 抽屉 - 右侧
+.drawer-right-enter-active,
+.drawer-right-leave-active {
+  transition: all 0.3s ease;
+}
+
+.drawer-right-enter-from,
+.drawer-right-leave-to {
+  transform: translateX(100%);
+}
+
+// 抽屉 - 顶部
+.drawer-top-enter-active,
+.drawer-top-leave-active {
+  transition: all 0.3s ease;
+}
+
+.drawer-top-enter-from,
+.drawer-top-leave-to {
+  transform: translateY(-100%);
+}
+
+// 抽屉 - 底部
+.drawer-bottom-enter-active,
+.drawer-bottom-leave-active {
+  transition: all 0.3s ease;
+}
+
+.drawer-bottom-enter-from,
+.drawer-bottom-leave-to {
+  transform: translateY(100%);
+}
+
+// ===== 消息动画 =====
+
+// 消息 - 顶部滑入
+.message-top-enter-active,
+.message-top-leave-active {
+  transition: all 0.3s ease;
+}
+
+.message-top-enter-from {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+.message-top-leave-to {
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+// 消息 - 底部滑入
+.message-bottom-enter-active,
+.message-bottom-leave-active {
+  transition: all 0.3s ease;
+}
+
+.message-bottom-enter-from {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.message-bottom-leave-to {
+  opacity: 0;
+  transform: translateY(50%);
+}
+
+// ===== 特效动画 =====
+
+// 弹跳
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// 脉冲
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// 闪烁
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+// 摇晃
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+// 旋转
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 渐入
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// 渐出
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+// 从下滑入
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 从上滑入
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 从左滑入
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// 从右滑入
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// 缩放进入
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// ===== 工具类 =====
+
+// 动画延迟
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+// 动画持续时间
+.duration-fast {
+  animation-duration: 150ms;
+}
+
+.duration-normal {
+  animation-duration: 300ms;
+}
+
+.duration-slow {
+  animation-duration: 500ms;
+}
+
+// 动画迭代次数
+.infinite {
+  animation-iteration-count: infinite;
+}
+
+// 动画填充模式
+.forwards {
+  animation-fill-mode: forwards;
+}
+
+.backwards {
+  animation-fill-mode: backwards;
+}
+
+.both {
+  animation-fill-mode: both;
+}
+
+// 常用动画组合
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease forwards;
+}
+
+.animate-slide-left {
+  animation: slideLeft 0.3s ease forwards;
+}
+
+.animate-slide-right {
+  animation: slideRight 0.3s ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease forwards;
+}
+
+// 交错动画延迟
+@for $i from 1 through 10 {
+  .stagger-#{$i} {
+    animation-delay: #{$i * 50}ms;
+  }
+}

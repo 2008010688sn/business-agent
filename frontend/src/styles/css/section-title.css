@@ -1,0 +1,23 @@
+.xx-section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.xx-section-title::before {
+  display: inline-block;
+  width: 4px;
+  height: 15px;
+  border-radius: 2px;
+  background-color: var(--el-color-primary-light-5);
+  content: '';
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.el-card:hover .xx-section-title::before,
+.el-card:focus-within .xx-section-title::before {
+  background-color: var(--el-color-primary);
+}

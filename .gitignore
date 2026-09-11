@@ -1,0 +1,43 @@
+# IDE
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+*.swp
+
+# Env and secrets (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# Maven / Java build
+**/target/
+*.class
+*.jar
+*.war
+.mvn/wrapper/maven-wrapper.jar
+hs_err_pid*
+replay_pid*
+
+# Logs
+**/logs/
+*.log
+
+# Frontend build / deps
+**/node_modules/
+**/dist/
+**/.vite/
+**/.eslintcache
+frontend/dist/
+frontend/node_modules/
+
+# Local dumps (PII / large snapshots)
+data/
+backend/src/main/resources/sql/pg/demo-biz-data.sql
+
+# OS
+.DS_Store
+Thumbs.db
+

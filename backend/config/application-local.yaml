@@ -1,0 +1,14 @@
+# Local overlay: WSL PostgreSQL 16 (port 5433) + WSL Redis (16379).
+# Not committed secrets beyond demo password agent/agent.
+
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/business_agent
+    username: agent
+    password: agent
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 16379

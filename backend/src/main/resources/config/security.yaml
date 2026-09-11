@@ -1,0 +1,5 @@
+# Standalone demo: no Sa-Token / OAuth2. Elasticsearch is not deployed.
+management:
+  health:
+    elasticsearch:
+      enabled: false

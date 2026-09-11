@@ -1,0 +1,117 @@
+.service_business{ color: #000;}
+.service_business .no_weight{
+  font-weight: normal;
+}
+.service_business .contact_title{
+  position: relative;
+  font-weight: bold;
+  padding: 5px ;
+  border-bottom: 1px solid #cccccc;
+  color: #000;
+}
+.service_business .pad_15{
+  padding: 15px ;
+}
+.service_business .fontsize14{
+  font-size: 16px!important;
+}
+.service_business .asset_file {
+  display: block;
+  width: 200%;
+  height: 100px;
+  position: absolute;
+  opacity: 0;
+  right: 0;
+  top: 0;
+  cursor: pointer;
+  z-index: 9999;
+}
+.asset_nei ul {
+  width: calc(100% - 120px);
+  list-style: none;
+}
+
+.asset_nei ul li {
+  margin-bottom: 20px;
+}
+.service_business .span_statusText{
+  display: inline-block;
+  padding: 3px 10px;
+  color: #ffffff;
+  border-radius: 5px;
+  font-size: 12px;
+}
+.service_business .backcolor_blue{
+  background-color: #0b8aff;
+}
+.service_business .backcolor_green{
+  background-color: #27B161;
+}
+.service_business .backcolor_orange{
+  background-color: #F59A23;
+}
+.service_business .backcolor_red{
+  background-color: #C23A2C;
+}
+.service_business .backcolor_grey{
+  background-color: gray;
+}
+.dialog_detail .title_box{
+  background-color: #e6f7ff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 8px 10px 3px;
+  margin-bottom: 20px;
+}
+.title_question{
+  color: #0b8aff;
+}
+.icon_que{
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  font-size: 12px;
+  text-align: center;
+  padding: 0 5px;
+  border: 1px solid #0b8aff;
+  border-radius: 50%;
+}
+.p_tips{
+  margin-bottom: 10px;
+}
+.black_title{
+  font-weight: 600;
+  color: #333333;
+}
+.detail_btngroup{
+  position: absolute;
+  right: 20px;
+  top:10px;
+}
+.must_start{
+  color: red;
+}
+.pro_style{
+  position: relative;
+  min-height: 23px;
+}
+.pro_style .pro_choose{
+  position: absolute;
+  left: 0px;
+}
+.pro_style .pro_name{
+  margin-left: 30px;
+}
+.select_width6{
+  width: 600px!important;
+}
+
+@media print {
+  .no_print{
+    display: none !important;
+  }
+  #printThis{
+    zoom: 0.62;
+  }
+}

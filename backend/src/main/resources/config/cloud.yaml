@@ -1,0 +1,32 @@
+server:
+  port: 10108
+  servlet:
+    context-path: /ai
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 10s
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+  mvc:
+    async:
+      request-timeout: 3600000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never

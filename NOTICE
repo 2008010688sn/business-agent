@@ -1,0 +1,13 @@
+Business Agent
+Copyright (c) sn68
+
+This product includes software developed from:
+
+- Spring AI Alibaba DataAgent and related Apache-2.0 sources.
+  Copyright 2024-2026 the original author or authors.
+  https://www.apache.org/licenses/LICENSE-2.0
+
+- Soybean Admin related frontend packages (MIT).
+  Copyright (c) 2021 Soybean
+
+Do not remove upstream Apache/MIT copyright headers from derived source files.

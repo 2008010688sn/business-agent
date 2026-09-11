@@ -1,0 +1,994 @@
+/**
+ * 企业风格（Enterprise）全局 SCSS 样式
+ *
+ * 设计理念：紧凑、高效、信息密集
+ *
+ * 特点：
+ * - 蓝色系主色调（Ant Design 风格）
+ * - 较小圆角（4-6px）
+ * - 明显边框和阴影
+ * - 紧凑间距
+ * - 表格带斑马纹
+ * - 传统导航样式
+ */
+
+/* ===== Element Plus 变量覆盖 ===== */
+html.theme-style-enterprise:root {
+  --el-color-primary: rgb(var(--primary-color));
+  --el-color-primary-light-3: rgb(var(--primary-400-color));
+  --el-color-primary-light-5: rgb(var(--primary-300-color));
+  --el-color-primary-light-7: rgb(var(--primary-200-color));
+  --el-color-primary-light-9: var(--enterprise-blue-50);
+
+  --el-color-success: rgb(var(--success-color));
+  --el-color-success-light-3: rgb(var(--success-400-color));
+  --el-color-success-light-5: rgb(var(--success-300-color));
+  --el-color-success-light-7: rgb(var(--success-200-color));
+  --el-color-success-light-9: rgba(34, 197, 94, 0.08);
+
+  --el-color-warning: rgb(var(--warning-color));
+  --el-color-warning-light-3: rgb(var(--warning-400-color));
+  --el-color-warning-light-5: rgb(var(--warning-300-color));
+  --el-color-warning-light-7: rgb(var(--warning-200-color));
+  --el-color-warning-light-9: rgba(245, 158, 11, 0.08);
+
+  --el-color-info: rgb(var(--info-color));
+  --el-color-info-light-3: rgb(var(--info-400-color));
+  --el-color-info-light-5: rgb(var(--info-300-color));
+  --el-color-info-light-7: rgb(var(--info-200-color));
+  --el-color-info-light-9: rgba(59, 130, 246, 0.08);
+
+  --el-color-danger: rgb(var(--error-color));
+  --el-color-danger-light-3: rgb(var(--error-400-color));
+  --el-color-danger-light-5: rgb(var(--error-300-color));
+  --el-color-danger-light-7: rgb(var(--error-200-color));
+  --el-color-danger-light-9: rgba(239, 68, 68, 0.08);
+
+  --el-menu-item-hover-fill: var(--enterprise-menu-item-hover-fill);
+  --el-menu-item-height: var(--enterprise-menu-item-height);
+
+  --el-border-radius-base: var(--enterprise-radius-md);
+  --el-border-radius-small: var(--enterprise-radius-sm);
+  --el-border-radius-round: 20px;
+
+  --el-component-size: 32px;
+  --el-component-size-small: 24px;
+  --el-component-size-large: 36px;
+}
+
+html.theme-style-enterprise.dark:root {
+  --el-color-primary-light-9: transparent;
+  --el-color-success-light-9: transparent;
+  --el-color-warning-light-9: transparent;
+  --el-color-info-light-9: transparent;
+  --el-color-danger-light-9: transparent;
+}
+
+/* ===== 企业风格全局作用域 ===== */
+html.theme-style-enterprise {
+  --el-font-size-extra-small: var(--enterprise-font-size-extra-small);
+  --el-font-size-small: var(--enterprise-font-size-small);
+  --el-font-size-base: var(--enterprise-font-size-base);
+  --el-font-size-medium: var(--enterprise-font-size-medium);
+  --el-font-size-large: var(--enterprise-font-size-large);
+  --el-font-size-extra-large: var(--enterprise-font-size-extra-large);
+  --el-table-text-color: var(--enterprise-page-text-color);
+  --el-table-bg-color: var(--enterprise-card-bg);
+  --el-table-tr-bg-color: var(--enterprise-card-bg);
+  --el-table-header-bg-color: var(--enterprise-bg-page);
+  --el-table-border-color: var(--enterprise-table-border-color);
+  --el-scrollbar-bg-color: var(--enterprise-scrollbar-thumb-color);
+  --el-scrollbar-hover-bg-color: var(--enterprise-scrollbar-thumb-color);
+  --el-scrollbar-opacity: var(--enterprise-scrollbar-thumb-opacity);
+  --el-scrollbar-hover-opacity: var(--enterprise-scrollbar-thumb-hover-opacity);
+
+  font-size: var(--enterprise-font-size-base);
+
+  /* ===== 基础样式 ===== */
+  .bg-inverted {
+    .el-menu {
+      --el-menu-bg-color: transparent;
+      --el-menu-text-color: #e5eaf3;
+    }
+  }
+
+  :focus-visible {
+    outline: 0;
+  }
+
+  /* ===== 按钮 - 企业风格 ===== */
+  .el-button {
+    border-radius: var(--enterprise-radius-button) !important;
+    font-weight: 500;
+    transition: var(--enterprise-transition-normal);
+
+    &.el-button--default {
+      background: var(--enterprise-btn-bg);
+      border: var(--enterprise-btn-border);
+      box-shadow: var(--enterprise-btn-shadow);
+
+      &:hover,
+      &:active {
+        color: var(--el-button-hover-text-color);
+        background: var(--enterprise-btn-hover-bg);
+        border-color: var(--enterprise-btn-hover-border-color);
+        box-shadow: var(--enterprise-btn-hover-shadow);
+      }
+
+      &:active {
+        background: var(--enterprise-btn-active-bg);
+        border-color: var(--enterprise-btn-active-border-color);
+      }
+    }
+
+    &.el-button--primary {
+      color: var(--el-color-white);
+      background: var(--enterprise-btn-primary-bg);
+      border: none;
+      box-shadow: var(--enterprise-btn-primary-shadow);
+
+      &:hover {
+        color: var(--el-color-white);
+        background: var(--enterprise-btn-primary-hover-bg);
+        box-shadow: var(--enterprise-btn-primary-hover-shadow);
+      }
+
+      &:active {
+        background: var(--enterprise-btn-primary-active-bg);
+      }
+    }
+
+    &.el-button--primary.is-text {
+      --el-button-text-color: var(--el-color-primary);
+      --el-button-bg-color: transparent;
+      --el-button-border-color: transparent;
+      --el-button-hover-text-color: var(--el-color-primary-light-3);
+      --el-button-hover-bg-color: transparent;
+      --el-button-hover-border-color: transparent;
+      --el-button-active-text-color: var(--el-color-primary-dark-2);
+      --el-button-active-bg-color: transparent;
+      --el-button-active-border-color: transparent;
+
+      color: var(--el-button-text-color);
+      background: transparent;
+      border-color: transparent;
+
+      &:hover {
+        color: var(--el-button-hover-text-color);
+        background: transparent;
+        border-color: transparent;
+      }
+
+      &:active {
+        color: var(--el-button-active-text-color);
+        background: transparent;
+        border-color: transparent;
+      }
+    }
+
+    &.el-button--text,
+    &.is-text {
+      padding: 8px 12px;
+      height: var(--el-component-size);
+      min-height: 0;
+    }
+
+    &.el-button--large {
+      height: 36px;
+      padding: 0 16px;
+      font-size: var(--enterprise-font-size-button-large);
+    }
+
+    &.el-button--small {
+      height: 24px;
+      padding: 0 8px;
+      font-size: var(--enterprise-font-size-button-small);
+    }
+  }
+
+  /* ===== 输入框 - 企业风格 ===== */
+  .el-input__wrapper {
+    border-radius: var(--enterprise-radius-button) !important;
+    background: var(--enterprise-input-bg);
+    border: var(--enterprise-input-border);
+    border-radius: var(--enterprise-radius-button);
+    color: var(--enterprise-input-text-color);
+    transition: var(--enterprise-field-transition);
+    box-shadow: none;
+
+    &:hover,
+    &.is-hovering:not(.is-focused) {
+      border-color: var(--enterprise-field-hover-border-color);
+    }
+
+    &.is-focus,
+    &.is-focused,
+    &.is-active,
+    &:focus {
+      border-color: var(--enterprise-input-focus-border);
+      box-shadow: var(--enterprise-input-focus-shadow);
+    }
+  }
+
+  .el-textarea__inner {
+    border-radius: var(--enterprise-radius-button) !important;
+    background: var(--enterprise-input-bg);
+    border: var(--enterprise-input-border);
+    border-radius: var(--enterprise-radius-button);
+    color: var(--enterprise-input-text-color);
+    transition: var(--enterprise-field-transition);
+    box-shadow: none;
+
+    &:hover,
+    &.is-hovering:not(.is-focused) {
+      border-color: var(--enterprise-field-hover-border-color);
+    }
+
+    &.is-focus,
+    &.is-focused,
+    &.is-active,
+    &:focus {
+      border-color: var(--enterprise-input-focus-border);
+      box-shadow: var(--enterprise-input-focus-shadow);
+    }
+  }
+
+  .el-input__inner,
+  .el-select__placeholder:not(.is-transparent),
+  .el-select__input,
+  .el-select__tags-text,
+  .el-date-editor .el-range-input {
+    color: var(--enterprise-input-text-color);
+  }
+
+  /* ===== 卡片 - 企业风格 ===== */
+  .el-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--enterprise-card-bg);
+    border: var(--enterprise-card-border);
+    border-radius: var(--enterprise-radius-card);
+    box-shadow: var(--enterprise-card-shadow);
+    transition: var(--enterprise-transition-normal);
+
+    &:hover {
+      box-shadow: var(--enterprise-card-hover-shadow);
+      border-color: var(--enterprise-card-hover-border-color);
+    }
+
+    --el-card-padding: 16px;
+
+    .el-card__header {
+      font-weight: 500;
+      font-size: var(--enterprise-font-size-card-title);
+      padding-bottom: 0;
+      border: none;
+      background: transparent;
+    }
+
+    .el-card__body {
+      height: 100%;
+    }
+  }
+
+  /* ===== 弹窗 - 企业风格 ===== */
+  .el-dialog {
+    border-radius: var(--enterprise-radius-lg) !important;
+    overflow: hidden;
+    background: var(--enterprise-modal-bg);
+    box-shadow: var(--enterprise-modal-shadow);
+    border: var(--enterprise-modal-border);
+    padding: 0;
+
+    .el-dialog__header {
+      padding: 16px 20px;
+      margin: 0;
+      background: var(--enterprise-modal-bg);
+      border-bottom: var(--enterprise-border-subtle);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .el-dialog__title {
+        font-size: var(--enterprise-font-size-title);
+        font-weight: 600;
+        line-height: 1;
+      }
+    }
+
+    .el-dialog__headerbtn {
+      position: static;
+      top: auto;
+      right: auto;
+    }
+
+    .el-dialog__body {
+      padding: 20px;
+    }
+
+    .el-dialog__footer {
+      padding: 12px 20px;
+      background: var(--enterprise-modal-bg);
+      overflow: hidden;
+      border-top: var(--enterprise-border-subtle);
+    }
+
+    .el-dialog__headerbtn {
+      top: 16px;
+      right: 16px;
+    }
+  }
+
+  .el-overlay {
+    background: var(--enterprise-modal-overlay);
+  }
+
+  /* ===== 抽屉 - 企业风格 ===== */
+  .el-drawer {
+    background: var(--enterprise-modal-bg);
+
+    .el-drawer__header {
+      padding: 16px 20px;
+      margin-bottom: 0;
+      border-bottom: var(--enterprise-border-subtle);
+
+      .el-drawer__title {
+        font-size: var(--enterprise-font-size-title);
+        font-weight: 600;
+      }
+    }
+
+    .el-drawer__body {
+      padding: 20px;
+    }
+  }
+
+  /* ===== 表格 - 企业风格 ===== */
+  .el-table {
+    font-size: var(--enterprise-font-size-base);
+    border-radius: var(--enterprise-radius-table);
+    overflow: hidden;
+    box-shadow: var(--enterprise-card-shadow);
+    border: var(--enterprise-border-subtle);
+    --el-table-row-height: 48px;
+    --el-table-header-height: 44px;
+
+    .el-table__header-wrapper {
+      background: var(--enterprise-bg-page);
+
+      th {
+        font-weight: 600;
+        color: var(--enterprise-table-header-text-color);
+        background: var(--enterprise-bg-page);
+        border-bottom: var(--enterprise-border-light);
+      }
+    }
+
+    .el-table__body {
+      tr {
+        transition: var(--enterprise-transition-normal);
+
+        &:hover {
+          td {
+            background-color: var(--enterprise-bg-hover) !important;
+          }
+        }
+      }
+
+      tr.el-table__row--striped td {
+        background-color: var(--enterprise-bg-stripe);
+      }
+    }
+
+    .header {
+      border-top-left-radius: 3px;
+    }
+
+    .cell {
+      padding: 0;
+    }
+
+    &.el-table--border {
+      border: var(--enterprise-border-default);
+
+      &::before,
+      &::after,
+      > .el-table__inner-wrapper::before,
+      > .el-table__inner-wrapper::after,
+      .el-table__border-left-patch,
+      .el-table__border-right-patch,
+      .el-table__border-bottom-patch {
+        display: none;
+      }
+    }
+  }
+
+  /* ===== 消息提示 - 企业风格 ===== */
+  .el-message {
+    border-radius: var(--enterprise-radius-lg);
+    background: var(--enterprise-modal-bg);
+    box-shadow: var(--enterprise-shadow-md);
+    border: var(--enterprise-border-light);
+  }
+
+  /* ===== 通知 - 企业风格 ===== */
+  .el-notification {
+    border-radius: var(--enterprise-radius-lg);
+    background: var(--enterprise-modal-bg);
+    box-shadow: var(--enterprise-shadow-lg);
+    border: var(--enterprise-border-light);
+  }
+
+  /* ===== 下拉菜单 - 企业风格 ===== */
+  .el-dropdown-menu {
+    border-radius: var(--enterprise-radius-md);
+    background: var(--enterprise-dropdown-bg);
+    box-shadow: var(--enterprise-dropdown-shadow);
+    border: var(--enterprise-dropdown-border);
+    padding: 4px;
+
+    .el-dropdown-menu__item {
+      border-radius: var(--enterprise-radius-sm);
+      padding: 6px 12px;
+      transition: var(--enterprise-transition-fast);
+
+      &:hover {
+        background-color: var(--enterprise-bg-hover);
+      }
+    }
+  }
+
+  /* ===== 弹出层 ===== */
+  .el-menu--popup {
+    min-width: unset;
+  }
+
+  .el-popper {
+    border: var(--enterprise-dropdown-border);
+    border-radius: var(--enterprise-radius-md);
+    box-shadow: var(--enterprise-dropdown-shadow);
+  }
+
+  .el-select {
+    .el-select__wrapper {
+      border-radius: var(--enterprise-radius-button);
+      background: var(--enterprise-input-bg);
+      border: var(--enterprise-input-border);
+      color: var(--enterprise-input-text-color);
+      box-shadow: none;
+      transition: var(--enterprise-field-transition);
+
+      &:hover,
+      &.is-hovering:not(.is-focused) {
+        border-color: var(--enterprise-field-hover-border-color);
+      }
+
+      &.is-focus,
+      &.is-focused {
+        border-color: var(--enterprise-input-focus-border);
+        box-shadow: var(--enterprise-input-focus-shadow);
+      }
+
+      &.is-disabled {
+        background-color: var(--el-disabled-bg-color);
+        box-shadow: 0 0 0 1px var(--el-disabled-border-color) inset;
+        cursor: not-allowed;
+        pointer-events: none;
+
+        &:hover {
+          box-shadow: 0 0 0 1px var(--el-disabled-border-color) inset;
+        }
+      }
+    }
+
+    &.is-disabled .el-select__selected-item {
+      color: var(--el-disabled-text-color);
+    }
+
+    &.is-disabled .el-select__placeholder {
+      color: var(--el-text-color-placeholder);
+    }
+
+    &.is-disabled .el-select__caret {
+      color: var(--el-disabled-text-color);
+      cursor: not-allowed;
+    }
+  }
+
+  /* ===== 日期选择器 - 企业风格 ===== */
+  .el-date-editor {
+    .el-input__wrapper {
+      background: var(--enterprise-input-bg);
+      border: var(--enterprise-input-border);
+      border-radius: var(--enterprise-radius-button);
+      color: var(--enterprise-input-text-color);
+      transition: var(--enterprise-field-transition);
+      box-shadow: none;
+
+      &:hover,
+      &.is-hovering:not(.is-focused) {
+        border-color: var(--enterprise-field-hover-border-color);
+      }
+
+      &.is-focus,
+      &.is-focused,
+      &.is-active,
+      &:focus {
+        border-color: var(--enterprise-input-focus-border);
+        box-shadow: var(--enterprise-input-focus-shadow);
+      }
+    }
+  }
+
+  .el-date-editor.el-input__wrapper {
+    background: var(--enterprise-input-bg);
+    border: var(--enterprise-input-border);
+    border-radius: var(--enterprise-radius-button);
+    color: var(--enterprise-input-text-color);
+    transition: var(--enterprise-field-transition);
+    box-shadow: none;
+
+    &:hover,
+    &.is-hovering:not(.is-focused) {
+      border-color: var(--enterprise-field-hover-border-color);
+    }
+
+    &.is-focus,
+    &.is-focused,
+    &.is-active,
+    &:focus {
+      border-color: var(--enterprise-input-focus-border);
+      box-shadow: var(--enterprise-input-focus-shadow);
+    }
+  }
+
+  .el-date-editor.el-range-editor {
+    background: var(--enterprise-input-bg);
+    border: var(--enterprise-input-border);
+    border-radius: var(--enterprise-radius-button);
+    color: var(--enterprise-input-text-color);
+    transition: var(--enterprise-field-transition);
+    box-shadow: none;
+
+    &:hover,
+    &.is-hovering:not(.is-focused) {
+      border-color: var(--enterprise-field-hover-border-color);
+    }
+
+    &.is-focus,
+    &.is-focused,
+    &.is-active,
+    &:focus {
+      border-color: var(--enterprise-input-focus-border);
+      box-shadow: var(--enterprise-input-focus-shadow);
+    }
+  }
+
+  /* ===== 统一表单组件高度 ===== */
+  .el-input__wrapper,
+  .el-select__wrapper,
+  .el-date-editor.el-input__wrapper,
+  .el-date-editor .el-input__wrapper {
+    min-height: var(--el-component-size);
+  }
+
+  /* ===== 分页器 - 企业风格 ===== */
+  .el-pagination {
+    .el-pagination__jump {
+      .el-input {
+        .el-input__wrapper {
+          border-radius: var(--enterprise-radius-button);
+        }
+      }
+    }
+  }
+
+  /* ===== 菜单 - 企业风格 ===== */
+  .el-menu {
+    --el-menu-item-height: var(--enterprise-menu-item-height);
+    border-right: none;
+
+    .el-menu-item,
+    .el-sub-menu__title {
+      height: var(--enterprise-menu-item-height);
+      line-height: var(--enterprise-menu-item-height);
+      font-weight: var(--enterprise-menu-font-weight);
+    }
+
+    .el-menu-item.is-active,
+    .el-sub-menu.is-active > .el-sub-menu__title {
+      font-weight: 600;
+    }
+
+    &.el-menu--horizontal {
+      border: none;
+    }
+
+    .el-sub-menu.is-active {
+      > .el-sub-menu__title {
+        color: var(--el-menu-active-color);
+      }
+    }
+
+    .el-sub-menu__title > .el-icon:not(.el-sub-menu__icon-arrow),
+    li.el-menu-item > .el-icon {
+      position: relative;
+      z-index: 1;
+      transform-origin: center;
+      transition: transform 150ms ease;
+      will-change: transform;
+    }
+
+    .el-sub-menu__title:hover > .el-icon:not(.el-sub-menu__icon-arrow),
+    li.el-menu-item:not(.is-disabled):hover > .el-icon {
+      transform: scale(1.12);
+    }
+
+    .el-sub-menu__title:hover,
+    li.el-menu-item:not(.is-disabled):hover,
+    .el-menu-item.is-active {
+      background-color: unset;
+
+      &::before {
+        content: '';
+        position: absolute;
+        z-index: auto;
+        left: 8px;
+        right: 8px;
+        top: 0;
+        bottom: 0;
+        border-radius: var(--enterprise-radius-md);
+        pointer-events: none;
+        background-color: var(--enterprise-menu-item-hover-fill);
+      }
+    }
+
+    li.el-menu-item {
+      margin-top: 4px;
+      transition: var(--enterprise-transition-normal);
+
+      &.is-active,
+      &.is-active:hover {
+        &::before {
+          background-color: var(--enterprise-menu-item-hover-fill);
+        }
+      }
+    }
+
+    li.el-sub-menu {
+      margin-top: 4px;
+    }
+  }
+
+  /* ===== 折叠面板 ===== */
+  .el-collapse {
+    --el-collapse-header-font-size: var(--enterprise-font-size-collapse-title);
+    border: var(--enterprise-border-subtle);
+
+    .el-collapse-item__header {
+      border: none;
+    }
+
+    .el-collapse-item__wrap {
+      border: none;
+    }
+
+    .el-collapse-item__content {
+      padding-bottom: 0;
+    }
+  }
+
+  /* ===== 统计 ===== */
+  .el-statistic {
+    .el-statistic__content {
+      font-weight: 400;
+      font-size: var(--enterprise-font-size-statistic);
+    }
+  }
+
+  /* ===== 表单 ===== */
+  .el-form {
+    --el-form-label-font-size: var(--enterprise-font-size-base);
+
+    .el-form-item__label {
+      font-size: var(--enterprise-font-size-base);
+      align-items: center;
+      line-height: 1.2;
+    }
+  }
+
+  /* ===== 分段器 ===== */
+  .el-tabs {
+    &.segment {
+      border-radius: var(--enterprise-radius-md);
+      border: var(--enterprise-border-subtle);
+      padding: 2px;
+      background-color: var(--enterprise-bg-page);
+      --el-tabs-header-height: 30px;
+
+      .el-tabs__content {
+        display: none;
+      }
+
+      .el-tabs__header {
+        border: none;
+
+        .el-tabs__item {
+          border: none;
+          padding: 0 20px;
+          border-radius: var(--enterprise-radius-sm);
+        }
+      }
+    }
+  }
+
+  /* ===== 分割线 ===== */
+  .el-divider__text {
+    font-size: var(--enterprise-font-size-divider);
+  }
+
+  /* ===== 分段控制 ===== */
+  .el-segmented {
+    padding: 3px;
+    border-radius: var(--enterprise-radius-md);
+
+    .el-segmented__item {
+      border-radius: var(--enterprise-radius-sm);
+      padding: 4px 16px;
+      transition: var(--enterprise-transition-normal);
+    }
+
+    .el-segmented__item-selected {
+      border-radius: var(--enterprise-radius-sm);
+    }
+  }
+
+  /* ===== 标签页 - 企业风格 ===== */
+  .el-tabs {
+    .el-tabs__item {
+      transition: var(--enterprise-transition-normal);
+
+      &:hover {
+        color: var(--el-color-primary);
+      }
+
+      &.is-active {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .el-breadcrumb,
+  .el-button,
+  .el-card,
+  .el-dialog,
+  .el-drawer,
+  .el-dropdown-menu,
+  .el-form,
+  .el-input,
+  .el-pagination,
+  .el-popper,
+  .el-select,
+  .el-table,
+  .el-tabs,
+  .el-textarea {
+    font-size: var(--enterprise-font-size-base);
+  }
+
+  .el-checkbox {
+    --el-checkbox-input-width: var(--enterprise-checkbox-size);
+    --el-checkbox-input-height: var(--enterprise-checkbox-size);
+
+    .el-checkbox__inner {
+      width: var(--enterprise-checkbox-size);
+      height: var(--enterprise-checkbox-size);
+    }
+
+    .el-checkbox__inner::after {
+      left: 4px;
+      top: 1px;
+    }
+
+    .el-checkbox__input.is-indeterminate .el-checkbox__inner::before {
+      top: 5px;
+    }
+  }
+
+  .el-radio {
+    --el-radio-input-width: var(--enterprise-checkbox-size);
+    --el-radio-input-height: var(--enterprise-checkbox-size);
+  }
+
+  .el-switch {
+    --el-switch-on-color: var(--el-color-primary);
+  }
+
+  .el-breadcrumb__inner,
+  .el-table__body,
+  .el-tabs__item:not(.is-active),
+  .page-tab:not(.active) {
+    color: var(--enterprise-page-text-color);
+  }
+
+  .el-tabs__nav-wrap:after {
+    background-color: var(--enterprise-border-light);
+  }
+
+  .tabs-card-page {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: var(--enterprise-spacing-md);
+
+    .min-h-500px {
+      min-height: 0 !important;
+      height: 100%;
+    }
+
+    > .tabs-card-page__tabs-card {
+      flex: none;
+      border-bottom: none !important;
+      border-bottom-right-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+
+      > .el-card__body {
+        padding-top: 2px;
+        padding-bottom: 0;
+        border-bottom: none !important;
+      }
+    }
+
+    &:has(> .tabs-card-page__tabs-card:hover),
+    &:has(> .tabs-card-page__tabs-card:focus-within),
+    &:has(> .tabs-card-search .search-card:hover),
+    &:has(> .tabs-card-search .search-card:focus-within) {
+      > .tabs-card-page__tabs-card,
+      > .tabs-card-search .search-card {
+        border-color: var(--enterprise-card-hover-border-color);
+        box-shadow: var(--enterprise-card-hover-shadow);
+      }
+    }
+  }
+
+  .tabs-card-page__card {
+    display: flex;
+    flex: 1 1 0%;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+
+    > .el-card__body {
+      display: flex;
+      flex: 1 1 0%;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+  }
+
+  .tabs-card-page__content {
+    display: flex;
+    flex: 1 1 0%;
+    flex-direction: column;
+    margin-top: 0 !important;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .tabs-card-search{
+    .search-card {
+      border-top: none !important;
+      border-top-left-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+    }
+  }
+
+  .bg-layout.p-16px {
+    padding: var(--enterprise-layout-page-gap) !important;
+  }
+
+  .shadow-header-enterprise,
+  .shadow-tab-enterprise {
+    .el-button > div,
+    .el-button > span > div {
+      font-size: var(--enterprise-layout-action-icon-size);
+    }
+  }
+
+  .shadow-header-enterprise {
+    .el-dropdown svg,
+    .el-dropdown .iconify {
+      font-size: var(--enterprise-layout-user-icon-size);
+    }
+  }
+
+  #__GLOBAL_SIDER_MENU__ {
+    .simplebar-scrollbar::before {
+      background: var(--enterprise-scrollbar-thumb-color);
+    }
+
+    .simplebar-scrollbar.simplebar-visible::before {
+      opacity: var(--enterprise-scrollbar-thumb-opacity);
+    }
+
+    .simplebar-track.simplebar-hover .simplebar-scrollbar.simplebar-visible::before,
+    .simplebar-dragging .simplebar-scrollbar.simplebar-visible::before {
+      opacity: var(--enterprise-scrollbar-thumb-hover-opacity);
+    }
+  }
+
+  /* ===== 标签 - 企业风格 ===== */
+  .el-tag {
+    border-radius: var(--enterprise-radius-sm);
+    transition: var(--enterprise-transition-normal);
+  }
+
+  /* ===== 徽章 - 企业风格 ===== */
+  .el-badge {
+    .el-badge__content {
+      border-radius: var(--enterprise-radius-full);
+    }
+  }
+
+  /* ===== 进度条 - 企业风格 ===== */
+  .el-progress {
+    .el-progress-bar__outer {
+      border-radius: var(--enterprise-radius-full);
+    }
+
+    .el-progress-bar__inner {
+      border-radius: var(--enterprise-radius-full);
+      transition: var(--enterprise-transition-smooth);
+    }
+  }
+
+  /* ===== 骨架屏 ===== */
+  .el-skeleton {
+    .el-skeleton__item {
+      background: linear-gradient(
+        90deg,
+        var(--enterprise-bg-hover) 25%,
+        var(--enterprise-bg-active) 50%,
+        var(--enterprise-bg-hover) 75%
+      );
+      background-size: 200% 100%;
+      animation: enterprise-skeleton-loading 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes enterprise-skeleton-loading {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+html.theme-style-enterprise .bg-inverted .el-menu {
+  --el-menu-bg-color: transparent;
+  --el-menu-text-color: #e5eaf3;
+  --el-menu-hover-text-color: #ffffff;
+  --el-menu-item-hover-fill: rgba(255, 255, 255, 0.06);
+  --el-menu-hover-bg-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ===== 工具提示 - 企业风格 ===== */
+html.theme-style-enterprise .el-tooltip__popper {
+  background: var(--enterprise-gray-800) !important;
+  border: none !important;
+  border-radius: var(--enterprise-radius-md);
+  color: #ffffff !important;
+  box-shadow: var(--enterprise-shadow-md);
+}
+
+html.theme-style-enterprise .el-tooltip__popper .el-popper__content {
+  background: var(--enterprise-gray-800) !important;
+  color: #ffffff !important;
+}
+
+html.theme-style-enterprise .el-tooltip__popper .el-popper__arrow::before {
+  background: var(--enterprise-gray-800) !important;
+  border-color: var(--enterprise-gray-800);
+}

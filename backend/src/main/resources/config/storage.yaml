@@ -1,0 +1,6 @@
+spring:
+  ai:
+    agent:
+      storage:
+        directory: ${AGENT_STORAGE_DIRECTORY:./data/files}
+        public-base-url: ${AGENT_STORAGE_PUBLIC_BASE_URL:http://localhost:10108/ai}

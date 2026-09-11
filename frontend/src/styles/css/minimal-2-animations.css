@@ -1,0 +1,333 @@
+/**
+ * 极简主义 2.0 动画效果
+ * 
+ * 设计原则：
+ * - 流畅但克制
+ * - 不过度干扰用户注意力
+ * - 保持简洁和功能性
+ * - 使用标准缓动曲线
+ */
+
+/* ===== 基础动画 ===== */
+
+/* 淡入 */
+@keyframes minimal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 淡出 */
+@keyframes minimal-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* 从下方滑入 */
+@keyframes minimal-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 从上方滑入 */
+@keyframes minimal-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 从左侧滑入 */
+@keyframes minimal-slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 从右侧滑入 */
+@keyframes minimal-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 缩放进入 */
+@keyframes minimal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 弹性缩放 */
+@keyframes minimal-scale-spring {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  70% {
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 旋转进入 */
+@keyframes minimal-rotate-in {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+/* ===== 复合动画 ===== */
+
+/* 内容展开 */
+@keyframes minimal-expand {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    transform: translateY(0);
+  }
+}
+
+/* 内容收缩 */
+@keyframes minimal-collapse {
+  from {
+    opacity: 1;
+    max-height: 500px;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* 骨架屏加载 */
+@keyframes minimal-skeleton-loading {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* 微弱脉冲 */
+@keyframes minimal-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* 焦点环 */
+@keyframes minimal-focus-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0);
+  }
+}
+
+/* 点击反馈 */
+@keyframes minimal-click-feedback {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.98);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 摇动提示 */
+@keyframes minimal-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* 旋转 */
+@keyframes minimal-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== 实用动画类 ===== */
+
+/* 淡入 */
+.minimal-fade-in {
+  animation: minimal-fade-in 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 滑入 */
+.minimal-slide-up {
+  animation: minimal-slide-up 250ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.minimal-slide-down {
+  animation: minimal-slide-down 250ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.minimal-slide-left {
+  animation: minimal-slide-left 250ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.minimal-slide-right {
+  animation: minimal-slide-right 250ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+/* 缩放 */
+.minimal-scale-in {
+  animation: minimal-scale-in 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.minimal-scale-spring {
+  animation: minimal-scale-spring 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 旋转进入 */
+.minimal-rotate-in {
+  animation: minimal-rotate-in 250ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+/* 点击反馈 */
+.minimal-click {
+  animation: minimal-click-feedback 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 摇动 */
+.minimal-shake {
+  animation: minimal-shake 300ms ease-in-out;
+}
+
+/* 旋转 */
+.minimal-spin {
+  animation: minimal-spin 1s linear infinite;
+}
+
+/* 脉冲 */
+.minimal-pulse {
+  animation: minimal-pulse 2s ease-in-out infinite;
+}
+
+/* ===== 过渡类 ===== */
+
+/* 默认过渡 */
+.minimal-transition {
+  transition: var(--minimal-transition-normal);
+}
+
+/* 快速过渡 */
+.minimal-transition-fast {
+  transition: var(--minimal-transition-fast);
+}
+
+/* 平滑过渡 */
+.minimal-transition-smooth {
+  transition: var(--minimal-transition-smooth);
+}
+
+/* 弹性过渡 */
+.minimal-transition-spring {
+  transition: var(--minimal-transition-spring);
+}
+
+/* ===== 骨架屏 ===== */
+.minimal-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--minimal-bg-hover) 25%,
+    var(--minimal-bg-active) 50%,
+    var(--minimal-bg-hover) 75%
+  );
+  background-size: 200% 100%;
+  animation: minimal-skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* ===== 减少动效偏好 ===== */
+@media (prefers-reduced-motion: reduce) {
+  .minimal-fade-in,
+  .minimal-slide-up,
+  .minimal-slide-down,
+  .minimal-slide-left,
+  .minimal-slide-right,
+  .minimal-scale-in,
+  .minimal-scale-spring,
+  .minimal-rotate-in,
+  .minimal-click,
+  .minimal-shake,
+  .minimal-spin,
+  .minimal-pulse,
+  .minimal-skeleton {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  
+  .minimal-transition,
+  .minimal-transition-fast,
+  .minimal-transition-smooth,
+  .minimal-transition-spring {
+    transition-duration: 0.01ms !important;
+  }
+}

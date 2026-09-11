@@ -1,0 +1,121 @@
+/* 在你的全局样式文件或组件的<style>标签中 */
+// .el-table .cell {
+//   padding: 10px; /* 修改单元格内边距 */
+// }
+
+// .el-table th .cell {
+//   text-align: center; /* 表头内容居中 */
+// }
+
+// .el-table td .cell{
+//   text-align: center
+// }
+
+// .input_center .el-input__inner {
+//   text-align: center!important;
+// }
+
+.errSelect .el-input__wrapper,
+.errSelect .el-select__wrapper,
+.errSelect .el-textarea__wrapper {
+  border: 1px solid #ff0000 !important;
+}
+
+.el-table__body-wrapper .el-scrollbar__bar.is-vertical {
+  display: block !important;
+  width:9px!important;
+}
+
+.el-table__body-wrapper .el-scrollbar__bar.is-horizontal {
+  display: block !important;
+  height:9px!important;
+}
+
+.el-button {
+  user-select: text;
+}
+
+.el-button--primary.is-text{
+  margin-left: 0px!important;
+}
+
+.el-button--primary.is-text.is-disabled {
+  color: darkgray!important;
+
+}
+
+.el-table__cell{
+  padding-top: 12px!important;
+  padding-bottom: 12px!important;
+  padding-left: 2px!important;
+  padding-right: 10px!important;
+}
+
+.el-table .cell.el-tooltip{
+  padding-right: 10px!important;
+}
+
+.el-button.is-text{
+  padding: 0px 6px!important;
+}
+
+.el-dialog {
+  margin-top: 5vh !important;
+  min-width: 50%;
+}
+
+/* Dialog 关闭图标样式 */
+.el-dialog__headerbtn {
+  font-size: 24px !important;
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  font-size: 24px !important;
+  transition: all 0.2s !important;
+}
+
+.el-dialog__headerbtn .el-dialog__close:hover {
+  transform: scale(1.1) !important;
+  color: var(--el-color-primary) !important;
+}
+
+.el-dialog__headerbtn .el-dialog__close svg {
+  width: 24px !important;
+  height: 24px !important;
+  transition: all 0.2s !important;
+}
+
+.el-dialog__headerbtn .el-dialog__close:hover svg {
+  transform: scale(1.1) !important;
+}
+
+.el-table thead.is-group th.el-table__cell {
+  background-color: var(--el-table-header-bg-color);
+}
+
+.el-table__cell .el-input__wrapper .el-input__inner {
+  text-align: center;
+}
+.cascader-text-selected {
+  .el-checkbox,
+  .el-radio {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+
+  .el-cascader-node {
+    padding-left: 34px;
+  }
+
+  .el-checkbox__input,
+  .el-radio__input {
+    position: absolute;
+    left: 20px;
+  }
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sn68.agent.dataagent.repository.AgentTokenUsageDayMapper">
+
+    <!-- Token 日用量增量合并写入（PostgreSQL upsert）：
+         以 (stat_date, tenant_id, user_id, agent_id, model_config_id, provider, model_name, usage_source)
+         为冲突键；命中时各计数/token 列累加，昵称与 Agent 名称仅在新值非空时覆盖，并复活 deleted=false -->
+    <insert id="upsertDelta" parameterType="com.sn68.agent.dataagent.entity.AgentTokenUsageDay">
+        INSERT INTO agent_token_usage_day (
+            stat_date, tenant_id, user_id, user_nick_name, agent_id, agent_name, model_config_id, provider, model_name, usage_source,
+            request_count, success_count, failed_count, prompt_tokens, completion_tokens, total_tokens,
+            actual_tokens, estimated_tokens, unknown_count, create_time, last_modify_time, deleted
+        )
+        VALUES (
+            #{statDate}, #{tenantId}, #{userId}, #{userNickName}, #{agentId}, #{agentName}, #{modelConfigId}, #{provider}, #{modelName}, #{usageSource},
+            #{requestCount}, #{successCount}, #{failedCount}, #{promptTokens}, #{completionTokens}, #{totalTokens},
+            #{actualTokens}, #{estimatedTokens}, #{unknownCount}, #{createTime}, #{lastModifyTime}, false
+        )
+        ON CONFLICT (stat_date, tenant_id, user_id, agent_id, model_config_id, provider, model_name, usage_source)
+        DO UPDATE SET
+            request_count = agent_token_usage_day.request_count + EXCLUDED.request_count,
+            success_count = agent_token_usage_day.success_count + EXCLUDED.success_count,
+            failed_count = agent_token_usage_day.failed_count + EXCLUDED.failed_count,
+            prompt_tokens = agent_token_usage_day.prompt_tokens + EXCLUDED.prompt_tokens,
+            completion_tokens = agent_token_usage_day.completion_tokens + EXCLUDED.completion_tokens,
+            total_tokens = agent_token_usage_day.total_tokens + EXCLUDED.total_tokens,
+            actual_tokens = agent_token_usage_day.actual_tokens + EXCLUDED.actual_tokens,
+            estimated_tokens = agent_token_usage_day.estimated_tokens + EXCLUDED.estimated_tokens,
+            unknown_count = agent_token_usage_day.unknown_count + EXCLUDED.unknown_count,
+            user_nick_name = COALESCE(NULLIF(EXCLUDED.user_nick_name, ''), agent_token_usage_day.user_nick_name),
+            agent_name = COALESCE(NULLIF(EXCLUDED.agent_name, ''), agent_token_usage_day.agent_name),
+            last_modify_time = EXCLUDED.last_modify_time,
+            deleted = false
+    </insert>
+
+</mapper>

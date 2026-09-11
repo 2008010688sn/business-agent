@@ -1,0 +1,234 @@
+# Local recommended values for spring.ai.agent.* (fail-fast keys included).
+# Nacos is not used; missing production-only keys are listed in docs/config-gap.md.
+
+spring:
+  ai:
+    vectorstore:
+      type: pgvector
+      pgvector:
+        initialize-schema: false
+        schema-name: agent
+        table-name: vector_store
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1024
+    agent:
+      demo-model:
+        auto-seed: true
+      crypto:
+        enabled: false
+        migration:
+          enabled: false
+      langfuse:
+        enabled: false
+      im:
+        dingtalk:
+          enabled: false
+      code-executor:
+        code-pool-executor: ai_simulation
+        allow-unsafe-local-execution: false
+        python-max-tries-count: 5
+      skills:
+        local-path: ./agent-skills
+      llm-service-type: stream
+      max-sql-retry-count: 10
+      fusion-strategy: rrf
+      vector-store:
+        table-topk-limit: 10
+        table-similarity-threshold: 0.2
+        default-topk-limit: 8
+        default-similarity-threshold: 0.4
+        batch-del-topk-limit: 5000
+        enable-hybrid-search: false
+        file-path: ./data/vectorstore/vectorstore.json
+      embedding-batch:
+        encoding-type: cl100k_base
+        max-token-count: 8000
+        reserve-percentage: 0.2
+        max-text-count: 10
+      text-splitter:
+        chunk-size: 1000
+        token:
+          min-chunk-size-chars: 400
+          min-chunk-length-to-embed: 10
+          max-num-chunks: 5000
+          keep-separator: true
+        recursive:
+          chunk-overlap: 200
+        sentence:
+          sentence-overlap: 1
+        paragraph:
+          paragraph-overlap-chars: 200
+      model-cache:
+        enabled: true
+        max-size: 64
+      datasource-runtime-cache:
+        enabled: true
+        ttl: 5m
+      chat-attachment:
+        max-image-count: 9
+        max-model-image-count: 6
+        max-image-size: 5242880
+        max-total-size: 20971520
+        download-timeout-ms: 5000
+        allowed-content-types: image/png,image/jpeg,image/webp
+      multimodal:
+        enabled: true
+        ocr-enabled: true
+        pdf-max-kept-charts: 5
+      suite-file:
+        max-download-size: 52428800
+        download-timeout-ms: 5000
+      memory:
+        auto-context:
+          enabled: false
+          manual-enabled: true
+          token-ratio: 0.7
+          reserve-tokens: 2000
+          msg-threshold: 60
+          last-keep: 30
+          large-payload-threshold: 5000
+          offload-single-preview: 200
+          min-consecutive-tool-messages: 4
+          min-compression-token-threshold: 3000
+          current-round-compression-ratio: 0.3
+      long-term-memory:
+        enabled: true
+        recall-enabled-default: false
+        write-enabled-default: false
+        default-top-k: 5
+        default-similarity-threshold: 0.75
+        default-injection-token-budget: 1200
+        default-min-importance: 0.5
+        min-extraction-confidence: 0.7
+        auto-write-episodic-enabled: false
+        auto-write-sensitive-result-enabled: false
+        extraction-timeout-ms: 30000
+        recall-timeout-ms: 3000
+      runtime:
+        total-timeout: 180s
+        chat-deadline: 20m
+        chat-wait-timeout: 7d
+        model-timeout: 45s
+        tool-timeout: 30s
+        finish-buffer: 2s
+        model-http-connect-timeout: 5s
+        react-max-iterations: 16
+        default-result-rows: 20
+        max-result-rows: 200
+        max-model-calls: 16
+        max-tool-calls: 16
+        max-prompt-tokens: 5000000
+        no-progress-max-completed-identical-calls: 2
+        stale-turn-recovery-enabled: false
+        stale-turn-grace: 60s
+        stale-turn-scan-interval: 60s
+        outbox-dispatch:
+          fixed-delay: 5s
+        routing:
+          total-timeout: 5000ms
+          model-timeout: 3000ms
+          vector-timeout: 1500ms
+          model-min-start: 400ms
+          finish-buffer: 150ms
+          model-probe-timeout: 30s
+          model-probe-connect-timeout: 3s
+          embedding-probe-timeout: 30s
+          function-calling-enabled: false
+        deterministic:
+          total-timeout: 20s
+          planner-timeout: 8s
+          sql-timeout: 6s
+          max-output-tokens: 2048
+          max-attempts: 2
+          finish-buffer: 1s
+      routing:
+        pending-expiry-scan-interval: 60s
+        engine:
+          mode: LEGACY
+      orchestration:
+        scheduler: EVENT_DRIVEN
+        default-max-collaborators-per-run: 3
+        default-failure-strategy: continue
+        default-expose-trace: true
+        default-enabled: true
+        executor:
+          core-pool-size: 4
+          max-pool-size: 8
+          queue-capacity: 64
+          keep-alive: 60s
+      flow:
+        extract-timeout: 15s
+        extract-max-tokens: 0
+        max-parallel-resolvers: 4
+        max-resolver-waves: 8
+        max-fan-out-items: 20
+        executor-queue-capacity: 32
+      evaluation:
+        executor:
+          max-concurrency: 2
+          queue-capacity: 100
+      optimization:
+        auto-generate-enabled: false
+        max-trace-chars: 2000
+        shadow-enabled: false
+        shadow-tenant-ids: []
+      report:
+        prompt-preview-rows: 50
+        narrative-timeout-ms: 60000
+        compile-warn-ms: 80
+      report-visualization:
+        enabled: true
+        max-charts: 5
+        top-n: 12
+        max-trend-points: 120
+        max-metrics-per-chart: 4
+        pie-max-categories: 10
+      report-template:
+        marked-url: https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js
+        echarts-url: https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js
+      authorization:
+        mode: SHADOW
+        enforce-tenant-ids: []
+        deny-on-missing-sql: false
+        freeze-legacy-visibility-writes: false
+        enforce-gate:
+          enabled: true
+          min-comparable: 1
+      agentscope:
+        observability:
+          enabled: false
+          use-langfuse-tracer: false
+        v2:
+          redis-key-prefix: "as2:"
+          redis-ttl: 7d
+      tool-center:
+        enabled: true
+        mcp-client:
+          enabled: false
+        tool-sync:
+          enabled: false
+      digital-employee:
+        rollout:
+          enabled: false
+      task:
+        scheduler:
+          enabled: false
+          scan-cron: "0/10 * * * * ?"
+          executor-timeout-seconds: 30
+      web-evidence:
+        fetch-enabled: false
+        app-origins: []
+      security:
+        thinking-permission: dataagent:thinking:view
+        answer-source-permission: dataagent:answer-source:view
+        call-chain-permission: dataagent:call-chain:view
+        usage-view-permission: data-agent:usage:view
+        usage-manage-permission: data-agent:usage:manage
+
+agent:
+  temporal:
+    zone-id: Asia/Shanghai
+    locale: zh-CN
+    week-starts-on: MONDAY
+    ambiguity-strategy: ASK

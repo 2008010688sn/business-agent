@@ -1,0 +1,26 @@
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.sn68.agent
+  global-config:
+    banner: false
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: true
+      logic-not-delete-value: false
+      id-type: auto
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: "NULL"
+
+extend:
+  mybatis-plus:
+    multi-tenant:
+      type: COLUMN
+      include-tables: []
+    intercept:
+      data-permission:
+        enabled: false
+        remote: false
+    data-permission:
+      enabled: false
+      remote: false

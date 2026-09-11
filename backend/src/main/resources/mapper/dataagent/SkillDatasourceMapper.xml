@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sn68.agent.dataagent.repository.SkillDatasourceMapper">
+
+    <resultMap id="SkillDatasourceWithDatasourceMap" type="com.sn68.agent.dataagent.entity.SkillDatasource">
+        <id column="id" property="id" />
+        <result column="skill_id" property="skillId" />
+        <result column="datasource_id" property="datasourceId" />
+        <result column="is_active" property="isActive" />
+        <result column="create_by" property="createBy" />
+        <result column="create_name" property="createName" />
+        <result column="create_time" property="createTime" />
+        <result column="last_modify_by" property="lastModifyBy" />
+        <result column="last_modify_name" property="lastModifyName" />
+        <result column="last_modify_time" property="lastModifyTime" />
+        <result column="deleted" property="deleted" />
+        <association property="datasource" javaType="com.sn68.agent.dataagent.entity.Datasource" columnPrefix="ds_">
+            <id column="id" property="id" />
+            <result column="name" property="name" />
+            <result column="type" property="type" />
+            <result column="host" property="host" />
+            <result column="port" property="port" />
+            <result column="database_name" property="databaseName" />
+            <result column="connection_url" property="connectionUrl" />
+            <result column="username" property="username" />
+            <result column="password" property="password" />
+            <result column="status" property="status" />
+            <result column="test_status" property="testStatus" />
+            <result column="description" property="description" />
+        </association>
+    </resultMap>
+
+    <select id="selectBySkillIdWithDatasource" resultMap="SkillDatasourceWithDatasourceMap">
+        SELECT
+            ad.*,
+            d.id AS ds_id,
+            d.name AS ds_name,
+            d.type AS ds_type,
+            d.host AS ds_host,
+            d.port AS ds_port,
+            d.database_name AS ds_database_name,
+            d.connection_url AS ds_connection_url,
+            d.username AS ds_username,
+            d.password AS ds_password,
+            d.status AS ds_status,
+            d.test_status AS ds_test_status,
+            d.description AS ds_description
+        FROM skill_datasource ad
+        LEFT JOIN datasource d ON ad.datasource_id = d.id AND d.deleted = false
+        WHERE ad.skill_id = #{skillId}
+          AND ad.deleted = false
+          <choose>
+            <when test="tenantId != null and tenantId != ''">
+          AND (ad.tenant_id = #{tenantId} OR ad.tenant_id IS NULL OR ad.tenant_id = '')
+          AND (d.id IS NULL OR d.tenant_id = #{tenantId} OR d.tenant_id IS NULL OR d.tenant_id = '')
+            </when>
+            <otherwise>
+          AND 1 = 0
+            </otherwise>
+          </choose>
+        ORDER BY ad.create_time DESC
+    </select>
+
+</mapper>

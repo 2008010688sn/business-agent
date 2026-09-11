@@ -1,0 +1,47 @@
+@import './reset.css';
+@import './nprogress.css';
+@import './transition.css';
+@import './minimal-2-tokens.css';
+@import './minimal-2-animations.css';
+@import './enterprise-tokens.css';
+@import './section-title.css';
+@import './mobile.css';
+
+.xx-form-label-justify.el-form .el-form-item__label,
+.xx-form-label-justify .el-form-item__label,
+.el-form-item.xx-form-label-justify .el-form-item__label {
+  white-space: nowrap;
+}
+
+.xx-form-label-justify__label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.xx-form-label-justify__text {
+  display: grid;
+  grid-template-columns: repeat(var(--xx-form-label-char-count), 1fr);
+  width: 100%;
+}
+
+.xx-form-label-justify__char {
+  display: block;
+  text-align: right;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  font-size: 14px;
+}
+
+html.theme-style-enterprise body,
+html.theme-style-enterprise #app {
+  font-size: var(--enterprise-font-size-base);
+}
+
+html {
+  overflow-x: hidden;
+}

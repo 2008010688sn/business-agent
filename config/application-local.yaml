@@ -1,0 +1,12 @@
+# Same overlay when Maven cwd is the repo root.
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/business_agent
+    username: agent
+    password: agent
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 16379

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- 应用名称 -->
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="ai.log"/>
+
+    <!-- 日志文件路径 -->
+    <property name="LOG_DIR" value="logs/${appName}"/>
+
+    <!--
+        【优化点 1】控制台日志格式：
+        - [ReqId:%X{x-request-id:-N/A}]: 显示业务传递的 request-id，黄色高亮
+        - [TraceId:%X{traceId:-},SpanId:%X{spanId:-}]: 显示 Micrometer 生成的链路 ID，洋红色高亮
+    -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%-5level) %clr([ReqId:%X{x-request-id:-N/A}]){yellow} %clr([TraceId:%X{traceId:-},SpanId:%X{spanId:-}]){magenta} %clr(|){faint} %clr(%-15.15t){faint} %clr(|){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <!--
+        【优化点 2】文件日志格式：
+        - 纯文本格式，包含同样的 ID 信息，方便 grep 和 ELK 收集
+    -->
+    <property name="FILE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5level | [ReqId:%X{x-request-id:-}] | [TraceId:%X{traceId:-},SpanId:%X{spanId:-}] | ${PID:- } | %-15.15t | %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <!-- 输出到控制台 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 全部日志文件 - 按30MB分割 -->
+    <appender name="allFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/all.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/all.%d{yyyy-MM-dd, Asia/Shanghai}.%i.log.gz</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 错误日志文件 - 只记录ERROR级别 -->
+    <appender name="errorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/error.%d{yyyy-MM-dd, Asia/Shanghai}.%i.log.gz</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 警告及以上级别日志文件 -->
+    <appender name="warnFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/warn.%d{yyyy-MM-dd, Asia/Shanghai}.%i.log.gz</fileNamePattern>
+            <maxFileSize>30MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <!-- Snail appender -->
+    <!--<appender name="snailLogAppender" class="com.aizuda.snailjob.client.common.appender.SnailLogbackAppender"/>-->
+
+    <!-- 根据不同的环境设置不同的日志输出级别 -->
+    <springProfile name="default,local,dev">
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="allFile"/>
+            <appender-ref ref="errorFile"/>
+            <appender-ref ref="warnFile"/>
+            <!--<appender-ref ref="snailLogAppender"/>-->
+        </root>
+        <logger name="org.springframework.data.mongodb" level="DEBUG" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="allFile"/>
+        </logger>
+        <logger name="com.sn68.agent" level="DEBUG" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="allFile"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod,pre,test">
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="allFile"/>
+            <appender-ref ref="errorFile"/>
+            <appender-ref ref="warnFile"/>
+        </root>
+        <logger name="com.sn68.agent" level="DEBUG" additivity="false">
+            <appender-ref ref="allFile"/>
+        </logger>
+        <logger name="org.springframework.data.mongodb" level="DEBUG" additivity="false">
+            <appender-ref ref="allFile"/>
+        </logger>
+    </springProfile>
+
+</configuration>

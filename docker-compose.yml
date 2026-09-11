@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: business_agent
+      POSTGRES_USER: agent
+      POSTGRES_PASSWORD: agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./backend/src/main/resources/sql/pg/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./backend/src/main/resources/sql/pg/seed-demo.sql:/docker-entrypoint-initdb.d/02-seed-demo.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent -d business_agent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: business_agent
+      POSTGRES_USER: agent
+      POSTGRES_PASSWORD: agent
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      AGENT_OPENAI_BASE_URL: ${AGENT_OPENAI_BASE_URL:-}
+      AGENT_OPENAI_API_KEY: ${AGENT_OPENAI_API_KEY:-}
+      AGENT_OPENAI_CHAT_MODEL: ${AGENT_OPENAI_CHAT_MODEL:-}
+      AGENT_OPENAI_EMBEDDING_MODEL: ${AGENT_OPENAI_EMBEDDING_MODEL:-}
+      AGENT_STORAGE_DIRECTORY: /app/data/files
+      AGENT_STORAGE_PUBLIC_BASE_URL: ${AGENT_STORAGE_PUBLIC_BASE_URL:-http://localhost:10108/ai}
+    ports:
+      - "10108:10108"
+    volumes:
+      - ./data/files:/app/data/files
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:10108/ai/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  postgres-data:
