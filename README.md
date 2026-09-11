@@ -4,11 +4,6 @@
 
 定位不是 ERP/OMS，也不是现成的商业 SaaS 套餐。它是企业做内部 Agent 平台、或再包一层登录/计费做成 SaaS 时用的**完整运行时 + 治理台**。演示默认无登录（Open Access）。
 
-<p align="center">
-  <img src="docs/images/chat.png" alt="订单智能体流式问答" width="920">
-</p>
-<p align="center"><sub>核心场景：用自然语言问自己的库——「这个月有多少需求单」。</sub></p>
-
 ## 核心亮点
 
 1. **问自己的业务数据**：NL2SQL + 表白名单，模型只能打你勾选的表，不是把库敞给大模型。
