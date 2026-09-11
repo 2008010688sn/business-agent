@@ -1,6 +1,6 @@
 # 文档索引
 
-本目录是 Business Agent 的开源说明。先读仓库根 [`README.md`](../README.md)。
+本目录是 Business Agent 的开源说明。仓库首页（是什么、截图、能力）见根目录 [`README.md`](../README.md)。
 
 | 文档 | 内容 |
 |---|---|
